@@ -2,3 +2,4 @@
 /[Dd]0018E-project/.venv/Scripts
 /[Dd]0018E-project/.venv/pyvenv.cfg
 /[Dd]0018E-project/.venv/__pycache__
+*.pyc
