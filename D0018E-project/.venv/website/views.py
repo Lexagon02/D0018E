@@ -18,7 +18,6 @@ with connection:
         sql = "SELECT *  FROM `tv`"
         cursor.execute(sql)
         result = cursor.fetchone()
-        print(result)
 
 @views.route('/')
 def home():
