@@ -17,7 +17,7 @@ with connection:
         # Read a single record
         sql = "SELECT *  FROM `tv`"
         cursor.execute(sql)
-        result = cursor.fetchone()
+        result = cursor.fetchall()
 
 @views.route('/')
 def home():
