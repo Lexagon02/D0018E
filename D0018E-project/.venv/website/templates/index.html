@@ -87,13 +87,15 @@
 					 <td>4k (2160p)</td>
 					 <td>13990</td>
 				   </tr>
-				   <tr>
-					 <td>text2.1</td>
-					 <td>text2.2</td>
-					 <td>text2.3</td>
-					 <td>text2.3</td>
-					 <td>text2.3</td>
+				   {% for item in data %} 
+ 				   <tr>
+					 <td>{{item["model"]}}</td>
+					 <td>{{item["brand"]}}</td>
+					 <td>{{item["size"]}}</td>
+					 <td>{{item["resolution"]}}</td>
+					 <td>{{item["price"]}}</td>
 				   </tr>
+				   {% endfor %} 
 				   <tr>
 					 <td>text3.1</td>
 					 <td>text3.2</td>
