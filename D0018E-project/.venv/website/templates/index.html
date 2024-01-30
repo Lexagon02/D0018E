@@ -7,7 +7,7 @@
 		<meta charset="UTF-8">
 		<title>tvGiganten</title>
 		<link rel="stylesheet" type="text/css" href="static/tvGiganten.css">
-		<script type="text/javascript" src="tvGiganten.js"></script>
+		<script type="text/javascript" src="static/tvGiganten.js"></script>
 	</head>
 
 	<body onload="gameStart();">
@@ -72,28 +72,28 @@
 			<table>
 				<thead>
 				  <tr>
+					<th>Moddel</th>
 					<th>Brand</th>
-					<th>Model</th>
-					<th>Size (inches)</th>
-					<th>Resolution</th>
-					<th>Price (kr)</th>
+					<th>Size</th>
+					<th>Reselution</th>
+					<th>Price kr</th>
 				  </tr>
 				 </thead>
 				 <tbody>
 				   <tr>
 					 <td>UR8000</td> <!--Ska ändras så att datan laddas in från databasen-->
 					 <td>LG</td>
-					 <td>65</td>
+					 <td>65"</td>
 					 <td>4k (2160p)</td>
 					 <td>13990</td>
 				   </tr>
 				   {% for item in data %}
 				   <tr>
 					 <td>{{item["brand"]}}</td>
-					 <td>{{item["model"]}}</td>
-					 <td>{{item["size"]}}</td>
-					 <td>{{item["resolution"]}}</td>
-					 <td>{{item["price"]}}</td>
+					 <td>text2.2</td>
+					 <td>text2.3</td>
+					 <td>text2.3</td>
+					 <td>text2.3</td>
 				   </tr>
 				   {% endfor %}
 				   <tr>
@@ -113,8 +113,9 @@
 		<div class="info-box">
 			<div class="origin">
 				<h1>Om oss</h1>
-				<p>Vi är experter inom TV-apparater och är säkra på att vi för något
-					som passar alla!
+				<p>Vi är tv proffs som kan allt om tv apparater
+					och våran uppgift är att du ska få den bässta 
+					tvn jusst för dig.
 				</p>
 			</div>
 			<div class="about">
@@ -125,8 +126,8 @@
 			</div>
 		</div>
 
-		<script src="navScript.js"></script>
-		<script src="navButtons.js"></script>
+		<script src="static/navScript.js"></script>
+		<script src="static/navButtons.js"></script>
 
 	</body>
 </html>
