@@ -15,10 +15,29 @@ with connection:
 
     with connection.cursor() as cursor:
         # Read a single record
-        sql = "SELECT *  FROM `tv`"
+        sql = "SELECT model, brand, size, resolution, price FROM `tv`"
         cursor.execute(sql)
         result = cursor.fetchall()
 
+
 @views.route('/')
+
+
 def home():
-    return render_template("index.html", data=result)
+    headings = ['Model', 'Brand', 'Size', 'Resolution', 'Price']
+    #data = result
+    
+    data = (
+        ('UR8000','LG' ,'65','2160', '13999'),
+        ('UR8000','LG' ,'65','2160', '13999'),
+        ('UR8000','LG' ,'65','2160', '13999'),
+        ('UR8000','LG' ,'65','2160', '13999'),
+        ('UR8000','LG' ,'65','2160', '13999'),
+        ('UR8000','LG' ,'65','2160', '13999'),
+    )
+
+    return render_template(
+        'index.html',
+        headings=headings,
+        data=data
+    )

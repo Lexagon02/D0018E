@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="static/tvGiganten.js"></script>
 	</head>
 
-	<body onload="gameStart();">
+	<!--<body onload="gameStart();">-->
 
 		<nav>
 			<div class="logo">
@@ -64,47 +64,23 @@
 			</div>
 		</div>
 
-		
-
-		
-
 		<div class="game-container" id="game-container">
 			<table>
 				<thead>
-				  <tr>
-					<th>Moddel</th>
-					<th>Brand</th>
-					<th>Size</th>
-					<th>Reselution</th>
-					<th>Price kr</th>
-				  </tr>
-				 </thead>
-				 <tbody>
-				   <tr>
-					 <td>UR8000</td> <!--Ska ändras så att datan laddas in från databasen-->
-					 <td>LG</td>
-					 <td>65"</td>
-					 <td>4k (2160p)</td>
-					 <td>13990</td>
-				   </tr>
-				   {% for item in data %}
-				   <tr>
-					 <td>{{item["brand"]}}</td>
-					 <td>text2.2</td>
-					 <td>text2.3</td>
-					 <td>text2.3</td>
-					 <td>text2.3</td>
-				   </tr>
-				   {% endfor %}
-				   <tr>
-					 <td>text3.1</td>
-					 <td>text3.2</td>
-					 <td>text3.3</td>
-					 <td>text2.3</td>
-					 <td>text2.3</td>
-				   </tr>
-				   <tr>
-				   </tr>
+					<tr>
+					{% for header in headings %}
+						<th>{{ header }}</th>
+					{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+						  {% for row in data %}
+						  <tr>
+							  {% for cell in row %}
+							  <td>{{ cell }}</td>
+							{% endfor %}
+						</tr>
+						  {% endfor %}
 				</tbody>
 			  </table>
 			  
