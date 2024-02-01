@@ -12,11 +12,13 @@
 
 
 <form action="{{ url_for("auth.login")}}" method="post">
-    <label for="firstname">First Name:</label>
-    <input type="text" id="firstname" name="fname" placeholder="firstname">
-    <label for="password">Password:</label>
-    <input type="text" id="password" name="pword" placeholder="password">
-    <button type="submit">Login</button>
+    <div class = "registerform">
+        <label for="mail">Email:</label>
+        <input type="text" id="mail" name="mail">
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="pword">
+        <button type="submit">Login</button>
+    </div>
 
     </form>
 </html>

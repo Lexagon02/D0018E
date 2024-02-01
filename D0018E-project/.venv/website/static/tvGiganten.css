@@ -372,13 +372,7 @@ input[type=range]::-ms-thumb {
 	cursor: pointer;
 }
 
-input[type=range]:focus::-ms-fill-lower {
-	background: #d90429;
-}
 
-input[type=range]:focus::-ms-fill-upper {
-	background: #d90429;
-}
   
 button {
 	padding: 12px 12px;
@@ -395,6 +389,22 @@ button {
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
+a {
+	padding: 12px 12px;
+	color: #edf2f4;
+	background-color: #d90429;
+	border: 2px solid #edf2f4;
+	border-radius: 20px/50px;
+	text-decoration: none;
+	letter-spacing: 3px;
+	cursor: pointer;
+	transition: all 0.3s ease-out;
+	font-weight: bold;
+	font-size: 14px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
 
 .info-box {
 	display: flex;
@@ -426,6 +436,12 @@ button {
 	padding: 10px;
 	margin: 10px;
 }
+.registerform{
+    display:flex;
+    flex-direction: column;
+	align-items: center;
+}
+
 
 
 @media screen and (max-width: 1024px) {

@@ -15,13 +15,19 @@ def register():
     if request.method == "POST":
        # getting input with name = fname in HTML form
        first_name = request.form.get("fname")
-       # getting input with name = lname in HTML form 
+       # getting input with name = fname in HTML form
+       surname = request.form.get("sname")
+       # getting input with name = fname in HTML form
+       mail = request.form.get("mail")
+       # getting input with name = fname in HTML form
+       address = request.form.get("address")
+       # getting input with name = fname in HTML form
        password = request.form.get("pword") 
        with connection:
         with connection.cursor() as cursors:
             # Read a single record
             sql = "INSERT INTO users (name,surname,mail,password,address) VALUES (%s,%s,%s,%s,%s);"
-            cursors.execute(sql,(first_name,"asd","NULL",password,"NULL"))
+            cursors.execute(sql,(first_name,surname,mail,password,address))
             connection.commit()
             
        
@@ -39,14 +45,14 @@ def login():
 
     if request.method == "POST":
        # getting input with name = fname in HTML form
-       first_name = request.form.get("fname")
+       mail = request.form.get("mail")
        # getting input with name = lname in HTML form 
        password = request.form.get("pword") 
        with connection:
             with connection.cursor() as cursorn:
                 # Read a single record
-                sql = "SELECT `surname` FROM users WHERE name = %s AND password = %s"
-                cursorn.execute(sql,(first_name,password))
+                sql = "SELECT `surname` FROM users WHERE mail = %s AND password = %s"
+                cursorn.execute(sql,(mail,password))
                 result = cursorn.fetchall()
             
        
