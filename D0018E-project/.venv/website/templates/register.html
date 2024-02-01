@@ -9,6 +9,24 @@
     <script type="text/javascript" src="static/tvGiganten.js"></script>
 </head>
 
+<nav>
+    <div class="logo">
+        <a class ="LOGO" href="/">TvGiganten</a>
+    </div>
+
+    <ul class="nav-links">
+        <a class="nav-button" onclick="toggleRules()">Filter</a>
+        <a class="nav-button" onclick="toggleInfo()">Kassa</a>
+        <a class="nav-button" href = "/register">Register</a>
+        <a class="nav-button" href = "/login">Login</a>
+    </ul>
+
+    <div class="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+    </div>
+</nav>
 
 
 <form action="{{ url_for("auth.register")}}" method="post">
@@ -23,7 +41,7 @@
         <input type="text" id="mail" name="mail">
         <label for="address">Address:</label>
         <input type="text" id="address" name="address">
-        <button type="submit">Register</button>
+        <button class="nav-button" type="submit">Register</button>
     </div>
 
     </form>

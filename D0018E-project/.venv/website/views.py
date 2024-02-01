@@ -25,19 +25,9 @@ with connection:
 
 def home():
     headings = ['Model', 'Brand', 'Size', 'Resolution', 'Price']
-    #data = result
-    
-    data = (
-        ('UR8000','LG' ,'65','2160', '13999'),
-        ('UR8000','LG' ,'65','2160', '13999'),
-        ('UR8000','LG' ,'65','2160', '13999'),
-        ('UR8000','LG' ,'65','2160', '13999'),
-        ('UR8000','LG' ,'65','2160', '13999'),
-        ('UR8000','LG' ,'65','2160', '13999'),
-    )
 
     return render_template(
         'index.html',
         headings=headings,
-        data=data
+        data=result
     )

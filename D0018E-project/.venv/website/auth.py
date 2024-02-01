@@ -12,6 +12,12 @@ auth = Blueprint('auth', __name__)
 
 @auth.route("/register", methods = ["GET", "POST"])
 def register():
+    connection = pymysql.connect(host='d0018e-database.cvwk6aiy4nnq.eu-north-1.rds.amazonaws.com',
+                             user='admin',
+                             password='ltu1234567',
+                             database='database',
+                             cursorclass=pymysql.cursors.DictCursor)
+
     if request.method == "POST":
        # getting input with name = fname in HTML form
        first_name = request.form.get("fname")
@@ -51,10 +57,13 @@ def login():
        with connection:
             with connection.cursor() as cursorn:
                 # Read a single record
-                sql = "SELECT `surname` FROM users WHERE mail = %s AND password = %s"
+                sql = "SELECT name,surname FROM users WHERE mail = %s AND password = %s"
                 cursorn.execute(sql,(mail,password))
                 result = cursorn.fetchall()
-            
-       
-       return "Your id "+ str(result)
-    return render_template("login.html")
+            return render_template("profile.html", data=result)
+    else:
+        return render_template("login.html")
+
+@auth.route("/profile", methods = ["GET", "POST"])
+def profile():
+    return render_template("profile.html")
