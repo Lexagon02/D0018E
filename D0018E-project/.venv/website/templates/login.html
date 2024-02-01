@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>tvGiganten</title>
+    <link rel="stylesheet" type="text/css" href="static/tvGiganten.css">
+    <script type="text/javascript" src="static/tvGiganten.js"></script>
+</head>
+
+
+
+<form action="{{ url_for("auth.login")}}" method="post">
+    <label for="firstname">First Name:</label>
+    <input type="text" id="firstname" name="fname" placeholder="firstname">
+    <label for="password">Password:</label>
+    <input type="text" id="password" name="pword" placeholder="password">
+    <button type="submit">Login</button>
+
+    </form>
+</html>
