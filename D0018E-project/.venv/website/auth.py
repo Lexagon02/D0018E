@@ -32,7 +32,7 @@ def register():
        with connection:
         with connection.cursor() as cursors:
             # Read a single record
-            sql = "INSERT INTO users (name,surname,mail,password,address) VALUES (%s,%s,%s,%s,%s);"
+            sql = "INSERT INTO users (name,surname,mail,password,address,isAdmin) VALUES (%s,%s,%s,%s,%s,0);"
             cursors.execute(sql,(first_name,surname,mail,password,address))
             connection.commit()
             
@@ -57,7 +57,7 @@ def login():
        with connection:
             with connection.cursor() as cursorn:
                 # Read a single record
-                sql = "SELECT name,surname FROM users WHERE mail = %s AND password = %s"
+                sql = "SELECT name,surname,isAdmin FROM users WHERE mail = %s AND password = %s"
                 cursorn.execute(sql,(mail,password))
                 result = cursorn.fetchall()
             return render_template("profile.html", data=result)
@@ -67,3 +67,7 @@ def login():
 @auth.route("/profile", methods = ["GET", "POST"])
 def profile():
     return render_template("profile.html")
+
+@auth.route("/adminStuff", methods = ["GET", "POST"])
+def adminStuff():
+    return render_template("adminStuff.html")

@@ -14,10 +14,7 @@
     </div>
 
     <ul class="nav-links">
-        <a class="nav-button" onclick="toggleRules()">Filter</a>
-        <a class="nav-button" onclick="toggleInfo()">Kassa</a>
-        <a class="nav-button" href = "/register">Register</a>
-        <a class="nav-button" href = "/login">Login</a>
+
     </ul>
 
     <div class="burger">
@@ -33,11 +30,18 @@
     {% for row in data %}
     <div class="profile">
         <p>Välkommen </p>
+        {% if row["isAdmin"] == 1 %}
+        <p>Admin</p>
+        <a class ="LOGO" href="/adminStuff">Admin Sidan</a>
+        {% else %}
+        <a class ="LOGO" href="/">TvGiganten</a>
+        {% endif %}
         <tr>
             <td>{{row["name"]}}</td>
             <td>{{row["surname"]}}</td>
         </tr>
     </div>
     {% endfor %}
+    
 </tbody>
 </html>
