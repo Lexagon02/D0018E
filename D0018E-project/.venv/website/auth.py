@@ -64,28 +64,37 @@ def profile():
 def adminStuff():
     adminCon=connection()
     heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price']
-
-
     if request.method == "POST":
-       model = request.form.get("model")
-       brand = request.form.get("brand")
-       size = request.form.get("size")
-       res = request.form.get("res")
-       price = request.form.get("price")
-       stock = request.form.get("stock")
-       adminCon=connection() 
-       
-       with adminCon:
-            with adminCon.cursor() as cursoraddTV:
-                # Read a single record
-                sql2 = "INSERT INTO tv (model,brand,size,resolution,price,stock) VALUES (%s,%s,%s,%s,%s,%s);"
-                sql3 =  "SELECT model, brand, size, resolution, price FROM `tv`"
-                cursoraddTV.execute(sql2,(model,brand,size,res,price,stock))
-                cursoraddTV.execute(sql3)
-                result = cursoraddTV.fetchall()
-                adminCon.commit() 
+        if request.form["action"]=="Add":
+            model = request.form.get("model")
+            brand = request.form.get("brand")
+            size = request.form.get("size")
+            res = request.form.get("res")
+            price = request.form.get("price")
+            stock = request.form.get("stock") 
+            with adminCon:
+                with adminCon.cursor() as cursoraddTV:
+                    # Read a single record
+                    sql2 = "INSERT INTO tv (model,brand,size,resolution,price,stock) VALUES (%s,%s,%s,%s,%s,%s);"
+                    sql3 =  "SELECT model, brand, size, resolution, price FROM `tv`"
+                    cursoraddTV.execute(sql2,(model,brand,size,res,price,stock))
+                    cursoraddTV.execute(sql3)
+                    result = cursoraddTV.fetchall()
+                    adminCon.commit() 
+            return render_template("adminStuff.html",headings=heading,data=result)
+        
+        if request.form["action"]=="Delete":
+            adminRem=connection()
+            model = request.form.get("modelRem")
+            with adminRem:
+                with adminRem.cursor() as cursorRemTV:
+                    sql4 = "DELETE FROM tv WHERE model=%s;"
+                    sql5 =  "SELECT model, brand, size, resolution, price FROM `tv`"
+                    cursorRemTV.execute(sql4,(model))
+                    cursorRemTV.execute(sql5)
+                    result = cursorRemTV.fetchall()
+                    adminRem.commit() 
 
-       return render_template("adminStuff.html",headings=heading,data=result)
     else:
         with adminCon:
             with adminCon.cursor() as cursorShowTV:
