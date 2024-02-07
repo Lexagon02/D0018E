@@ -64,13 +64,7 @@ def profile():
 def adminStuff():
     adminCon=connection()
     heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price']
-    adminFetch=connection()
-    with adminFetch:
-        with adminFetch.cursor() as cursorShowTV:
-                # Read a single record
-                sql = "SELECT model, brand, size, resolution, price FROM `tv`"
-                cursorShowTV.execute(sql)
-                result = cursorShowTV.fetchall()   
+
 
     if request.method == "POST":
        model = request.form.get("model")
@@ -78,21 +72,25 @@ def adminStuff():
        size = request.form.get("size")
        res = request.form.get("res")
        price = request.form.get("price")
-       stock = request.form.get("stock") 
+       stock = request.form.get("stock")
+       adminCon=connection() 
        
        with adminCon:
             with adminCon.cursor() as cursoraddTV:
                 # Read a single record
-                sql = "INSERT INTO tv (model,brand,size,resolution,price,stock) VALUES (%s,%s,%s,%s,%s,%s);"
-                cursoraddTV.execute(sql,(model,brand,size,res,price,stock))
-                adminCon.commit()
+                sql2 = "INSERT INTO tv (model,brand,size,resolution,price,stock) VALUES (%s,%s,%s,%s,%s,%s);"
+                sql3 =  "SELECT model, brand, size, resolution, price FROM `tv`"
+                cursoraddTV.execute(sql2,(model,brand,size,res,price,stock))
+                cursoraddTV.execute(sql3)
+                result = cursoraddTV.fetchall()
+                adminCon.commit() 
 
-       adminFetch=connection()
-       with adminFetch:
-            with adminFetch.cursor() as cursorShowTV:
+       return render_template("adminStuff.html",headings=heading,data=result)
+    else:
+        with adminCon:
+            with adminCon.cursor() as cursorShowTV:
                 # Read a single record
                 sql = "SELECT model, brand, size, resolution, price FROM `tv`"
                 cursorShowTV.execute(sql)
                 result = cursorShowTV.fetchall()   
-       return render_template("adminStuff.html",headings=heading,data=result)
     return render_template("adminStuff.html",headings=heading,data=result)
