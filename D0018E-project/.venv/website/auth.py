@@ -1,22 +1,19 @@
 from flask import Blueprint, render_template, request
 import pymysql.cursors
-connection = pymysql.connect(host='d0018e-database.cvwk6aiy4nnq.eu-north-1.rds.amazonaws.com',
-                             user='admin',
-                             password='ltu1234567',
-                             database='database',
-                             cursorclass=pymysql.cursors.DictCursor)
-
+def connection():
+    connection = pymysql.connect(host='d0018e-database.cvwk6aiy4nnq.eu-north-1.rds.amazonaws.com',
+                                 user='admin',
+                                 password='ltu1234567',
+                                 database='database',
+                                 cursorclass=pymysql.cursors.DictCursor)
+    return connection
 auth = Blueprint('auth', __name__)
 
 
 
 @auth.route("/register", methods = ["GET", "POST"])
 def register():
-    connection = pymysql.connect(host='d0018e-database.cvwk6aiy4nnq.eu-north-1.rds.amazonaws.com',
-                             user='admin',
-                             password='ltu1234567',
-                             database='database',
-                             cursorclass=pymysql.cursors.DictCursor)
+    registerCon=connection()
 
     if request.method == "POST":
        # getting input with name = fname in HTML form
@@ -29,12 +26,13 @@ def register():
        address = request.form.get("address")
        # getting input with name = fname in HTML form
        password = request.form.get("pword") 
-       with connection:
-        with connection.cursor() as cursors:
+       
+       with registerCon:
+        with registerCon.cursor() as cursors:
             # Read a single record
             sql = "INSERT INTO users (name,surname,mail,password,address,isAdmin) VALUES (%s,%s,%s,%s,%s,0);"
             cursors.execute(sql,(first_name,surname,mail,password,address))
-            connection.commit()
+            registerCon.commit()
             
        
        return "Your username is "+ first_name
@@ -42,20 +40,14 @@ def register():
 
 @auth.route("/login", methods = ["GET", "POST"])
 def login():
-    connection = pymysql.connect(host='d0018e-database.cvwk6aiy4nnq.eu-north-1.rds.amazonaws.com',
-                             user='admin',
-                             password='ltu1234567',
-                             database='database',
-                             cursorclass=pymysql.cursors.DictCursor)
-
-
+    loginCon=connection()
     if request.method == "POST":
        # getting input with name = fname in HTML form
        mail = request.form.get("mail")
        # getting input with name = lname in HTML form 
        password = request.form.get("pword") 
-       with connection:
-            with connection.cursor() as cursorn:
+       with loginCon:
+            with loginCon.cursor() as cursorn:
                 # Read a single record
                 sql = "SELECT name,surname,isAdmin FROM users WHERE mail = %s AND password = %s"
                 cursorn.execute(sql,(mail,password))
@@ -70,4 +62,37 @@ def profile():
 
 @auth.route("/adminStuff", methods = ["GET", "POST"])
 def adminStuff():
-    return render_template("adminStuff.html")
+    adminCon=connection()
+    heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price']
+    adminFetch=connection()
+    with adminFetch:
+        with adminFetch.cursor() as cursorShowTV:
+                # Read a single record
+                sql = "SELECT model, brand, size, resolution, price FROM `tv`"
+                cursorShowTV.execute(sql)
+                result = cursorShowTV.fetchall()   
+
+    if request.method == "POST":
+       model = request.form.get("model")
+       brand = request.form.get("brand")
+       size = request.form.get("size")
+       res = request.form.get("res")
+       price = request.form.get("price")
+       stock = request.form.get("stock") 
+       
+       with adminCon:
+            with adminCon.cursor() as cursoraddTV:
+                # Read a single record
+                sql = "INSERT INTO tv (model,brand,size,resolution,price,stock) VALUES (%s,%s,%s,%s,%s,%s);"
+                cursoraddTV.execute(sql,(model,brand,size,res,price,stock))
+                adminCon.commit()
+
+       adminFetch=connection()
+       with adminFetch:
+            with adminFetch.cursor() as cursorShowTV:
+                # Read a single record
+                sql = "SELECT model, brand, size, resolution, price FROM `tv`"
+                cursorShowTV.execute(sql)
+                result = cursorShowTV.fetchall()   
+       return render_template("adminStuff.html",headings=heading,data=result)
+    return render_template("adminStuff.html",headings=heading,data=result)

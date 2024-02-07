@@ -27,21 +27,46 @@
 </nav>
 
 
-<form action="{{ url_for("auth.register")}}" method="post">
+<form action="{{ url_for("auth.adminStuff")}}" method="post">
     <div class = "registerform">
-        <h1>(OBS!!! ADMIN) Här ska vi hitta på grejer</h1>
-        <label for="firstname">First Name:</label>
-        <input type="text" id="firstname" name="fname">
-        <label for="surname">Surname:</label>
-        <input type="text" id="surname" name="sname">
-        <label for="password">Password:</label>
-        <input type="text" id="password" name="pword">
-        <label for="mail">Email:</label>
-        <input type="text" id="mail" name="mail">
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address">
-        <button class="nav-button" type="submit">Register</button>
+        <h1>Lägg till TV</h1>
+        <label for="model">Model:</label>
+        <input type="text" id="model" name="model">
+        <label for="brand">Brand:</label>
+        <input type="text" id="brand" name="brand">
+        <label for="size">Size:</label>
+        <input type="text" id="size" name="size">
+        <label for="mail">Resolution:</label>
+        <input type="text" id="res" name="res">
+        <label for="price">Price:</label>
+        <input type="text" id="price" name="price">
+        <label for="stock">Stock:</label>
+        <input type="text" id="stock" name="stock">
+        <button class="nav-button" type="submit">Add</button>
     </div>
-
+    
+    <div class="game-container" id="game-container">
+        <table>
+            <thead>
+                <tr>
+                {% for header in headings %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                    {% for row in data %}
+                    <tr>
+                        <td>{{row["brand"]}}</td>
+                        <td>{{row["model"]}}</td>
+                        <td>{{row["size"]}}</td>
+                        <td>{{row["resolution"]}}</td>
+                        <td>{{row["price"]}}</td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+          </table>
+          
+    </div>
     </form>
 </html>
