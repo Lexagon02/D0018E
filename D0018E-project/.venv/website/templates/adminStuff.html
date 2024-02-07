@@ -29,7 +29,7 @@
 
 <form action="{{ url_for("auth.adminStuff")}}" method="post">
     <div class = "registerform">
-        <h1>Add TV</h1>
+        <h1>Lägg till TV</h1>
         <label for="model">Model:</label>
         <input type="text" id="model" name="model">
         <label for="brand">Brand:</label>
@@ -42,13 +42,7 @@
         <input type="text" id="price" name="price">
         <label for="stock">Stock:</label>
         <input type="text" id="stock" name="stock">
-        <button class="nav-button" type="submit" name="action" value="Add">Add</button>
-    </div>
-    <div class = "registerform">
-            <h1>Remove TV</h1>
-            <label for="modelRem">Model:</label>
-            <input type="text" id="modelRem" name="modelRem">
-            <button class="nav-button" type="submit" name="action" value="Delete">Remove</button>
+        <button class="nav-button" type="submit">Add</button>
     </div>
     
     <div class="game-container" id="game-container">
