@@ -20,8 +20,8 @@
 			<ul class="nav-links">
 				<button class="nav-button" onclick="toggleRules()">Filter</button>
 				<button class="nav-button" onclick="toggleInfo()">Kassa</button>
-				<a class="nav-button"  href = "/register">Register</a>
-				<a class="nav-button"  href = "/login">Login</a>
+				<a class="nav-button"  href = {{url_for('auth.register')}}>Register</a>
+				<a class="nav-button"  href = {{url_for('auth.login')}}>Login</a>
 			</ul>
 
 			<div class="burger">

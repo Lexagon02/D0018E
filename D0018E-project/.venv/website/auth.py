@@ -64,8 +64,6 @@ def profile():
 def adminStuff():
     adminCon=connection()
     heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price']
-
-
     if request.method == "POST":
         if request.form["action"]=="Add":
             model = request.form.get("model")
@@ -96,6 +94,7 @@ def adminStuff():
                     cursorRemTV.execute(sql5)
                     result = cursorRemTV.fetchall()
                     adminRem.commit() 
+
     else:
         with adminCon:
             with adminCon.cursor() as cursorShowTV:
