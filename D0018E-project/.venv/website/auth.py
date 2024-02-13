@@ -132,19 +132,24 @@ def adminStuff():
 
 @auth.route("/cart", methods = ["GET", "POST"])
 def cart():
-    heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price']
+    heading = ['Brand', 'Model', 'Price','Amount']
     cartCon=connection()
     with cartCon:
             with cartCon.cursor() as cursorCart:
                 # Read a single record
-                sql = "SELECT productid FROM cart WHERE userid = %s"
-                cursorCart.execute(sql,0)
-                input = cursorCart.fetchall()
-                print(input)
-                sql= "SELECT * FROM tv WHERE id = %s"
+                result=[]
+                sql = "SELECT productid,amount FROM cart WHERE userid = %s"
                 cursorCart.execute(sql,1)
-                result=cursorCart.fetchall()
-    print(result)
+                input = cursorCart.fetchall()
+                #print(input)
+                for i in range(len(input)):
+                    sql= "SELECT brand,model,price FROM tv WHERE id = %s"
+                    cursorCart.execute(sql,input[i].get('productid'))
+                    temp=cursorCart.fetchall()
+                    temp[0].update(input[i].items())
+                    print(temp[0])
+                    result=result+temp
+    #print(result)
     if request.method == "POST":
        # getting input with name = fname in HTML form
        mail = request.form.get("mail")
