@@ -62,17 +62,27 @@
 					{% for header in headings %}
 						<th>{{ header }}</th>
 					{% endfor %}
+					<th>Add to cart</th>
 					</tr>
 				</thead>
 				<tbody>
-						{% for row in data %}
+					{% for row in data %}
+					<form method="post" action="{{ url_for( "views.index" )}}">
 						<tr>
 							<td>{{row["brand"]}}</td>
-							<td>{{row["model"]}}</td>
+							<td>
+								<input type="hidden" name="model" value="{{ row["model"] }}">{{row["model"]}}
+							</td>
 							<td>{{row["size"]}}</td>
 							<td>{{row["resolution"]}}</td>
 							<td>{{row["price"]}}</td>
+							<td>{{row["stock"]}}</td>
+							<td>
+								<INPUT TYPE="NUMBER" name="NUMBER" MIN="1" MAX="100" STEP="1" VALUE="1" SIZE="1">
+								<button type="submit">Add</button>
+							</td>
 						</tr>
+					</form>
 						{% endfor %}
 				</tbody>
 			  </table>
