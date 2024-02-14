@@ -19,7 +19,7 @@
 
 			<ul class="nav-links">
 				<button class="nav-button" onclick="toggleRules()">Filter</button>
-				<button class="nav-button" onclick="toggleInfo()">Kassa</button>
+				<a class="nav-button"  href = {{url_for('auth.cart')}}>Kassa</a>
 				<a class="nav-button"  href = {{url_for('auth.register')}}>Register</a>
 				<a class="nav-button"  href = {{url_for('auth.login')}}>Login</a>
 			</ul>
@@ -44,16 +44,6 @@
 			</div>
 		</div>
 
-		<div class="popup" id="popup-3">
-			<div class="overlay"></div>
-			<div class="content">
-				<div class="close-btn" onclick="toggleInfo()">&times;</div>
-				<h1>Kassa</h1>
-				<ul class="links">
-
-				</ul>
-			</div>
-		</div>
 
 		<div class="game-container" id="game-container">
 			<table>
