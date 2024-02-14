@@ -120,7 +120,7 @@ def adminStuff():
                     userdata = cursorRemUser.fetchall()
                     adminRemUser.commit() 
 
-       return render_template("adminStuff.html",headings=heading,data=result)
+        return render_template("adminStuff.html",headings=heading,data=result)
     else:
         with adminCon:
             with adminCon.cursor() as cursorShowTV:
