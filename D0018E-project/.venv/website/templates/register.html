@@ -11,7 +11,7 @@
 
 <nav>
     <div class="logo">
-        <a class ="LOGO" href="/">TvGiganten</a>
+        <a class="LOGO" href="/">TvGiganten</a>
     </div>
 
     <div class="burger">
@@ -22,8 +22,8 @@
 </nav>
 
 
-<form action="{{ url_for("auth.register")}}" method="post">
-    <div class = "registerform">
+<form action="{{ url_for(" auth.register")}}" method="post">
+    <div class="registerform">
         <label for="firstname">First Name:</label>
         <input type="text" id="firstname" name="fname">
         <label for="surname">Surname:</label>
@@ -37,9 +37,10 @@
         <button class="nav-button" type="submit">Register</button>
         <h2>Or You Can</h2>
         <ul class="nav-links">
-            <a class="nav-button" href = "/login">Login</a>
+            <a class="nav-button" href="/login">Login</a>
         </ul>
     </div>
 
-    </form>
+</form>
+
 </html>
