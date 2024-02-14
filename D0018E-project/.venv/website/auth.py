@@ -71,6 +71,7 @@ def profile():
 def adminStuff():
     adminCon=connection()
     heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price']
+
     sqlTV =  "SELECT model, brand, size, resolution, price FROM `tv`"
     sqlUser =  "SELECT name, surname, mail, password, address, isAdmin FROM `users`"
     if request.method == "POST":
@@ -119,6 +120,7 @@ def adminStuff():
                     userdata = cursorRemUser.fetchall()
                     adminRemUser.commit() 
 
+       return render_template("adminStuff.html",headings=heading,data=result)
     else:
         with adminCon:
             with adminCon.cursor() as cursorShowTV:
