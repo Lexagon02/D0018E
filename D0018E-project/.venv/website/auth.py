@@ -50,6 +50,7 @@ def login():
        mail = request.form.get("mail")
        # getting input with name = lname in HTML form 
        password = request.form.get("pword") 
+       session["name"]=mail
        with loginCon:
             with loginCon.cursor() as cursorn:
                 # Read a single record
@@ -62,6 +63,11 @@ def login():
             return render_template("profile.html", data=result)
     else:
         return render_template("login.html")
+
+@auth.route("/logout", methods = ["GET", "POST"])
+def logout():
+    session["name"] = None
+    return render_template('login.html')
 
 @auth.route("/profile", methods = ["GET", "POST"])
 def profile():
@@ -134,22 +140,32 @@ def adminStuff():
 
 @auth.route("/cart", methods = ["GET", "POST"])
 def cart():
+    if not session.get("name"):
+        return render_template("login.html")
+    mail=session['name']
     heading = ['Brand', 'Model', 'Price','Amount']
     cartCon=connection()
     with cartCon:
             with cartCon.cursor() as cursorCart:
                 # Read a single record
                 result=[]
+                print(mail)
+                sql = "SELECT id FROM users WHERE mail = %s"
+                cursorCart.execute(sql,mail)
+                uid = cursorCart.fetchall()
                 sql = "SELECT productid,amount FROM cart WHERE userid = %s"
-                cursorCart.execute(sql,1)
+                cursorCart.execute(sql,uid[0].get('id'))
                 input = cursorCart.fetchall()
-                #print(input)
+                print(input)
                 for i in range(len(input)):
-                    sql= "SELECT brand,model,price FROM tv WHERE id = %s"
+                    sql= "SELECT brand,model,price FROM tv WHERE productid = %s"
                     cursorCart.execute(sql,input[i].get('productid'))
                     temp=cursorCart.fetchall()
+                    print(temp)
+                    if temp == ():
+                        return render_template("cart.html")
                     temp[0].update(input[i].items())
-                    print(temp[0])
+                    #print(temp[0])
                     result=result+temp
     #print(result)
     if request.method == "POST":
