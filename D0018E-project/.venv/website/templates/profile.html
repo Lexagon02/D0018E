@@ -11,10 +11,12 @@
 <nav>
     <div class="logo">
         <a class ="LOGO" href="/">TvGiganten</a>
+
     </div>
 
     <ul class="nav-links">
-
+        <a class="nav-button"  href = {{url_for('auth.cart')}}>Cart</a>
+        <a class="nav-button"  href = {{url_for('auth.logout')}}>Logout</a>
     </ul>
 
     <div class="burger">

@@ -44,7 +44,9 @@ def home():
         "index.html",
         headings=headings,
         data=result,
-        form = form
+        form = form,
+        value=login
+        
     )
 @views.route('/index', methods=["GET", "POST"])
 def index():
