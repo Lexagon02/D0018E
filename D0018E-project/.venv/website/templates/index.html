@@ -11,19 +11,32 @@
 	</head>
 
 	<!--<body onload="gameStart();">-->
+	
+		
+	</form>
+		<form method = "POST" action="{{url_for('views.search')}}">
+			{{ form.csrf_token }}
+		<input type = "search" placeholder = "Search"
+ 			aria-label="Search", name = "searched">
+		<button type="submit">Search</button>	
+	</form>
 
 		<nav>
 			<div class="logo">
 				<a class ="LOGO" href="/">TvGiganten</a>
 			</div>
-
+			
 			<ul class="nav-links">
 				<button class="nav-button" onclick="toggleRules()">Filter</button>
-				<a class="nav-button"  href = {{url_for('auth.cart')}}>Kassa</a>
+				<a class="nav-button"  href = {{url_for('auth.cart')}}>Cart</a>
 				<a class="nav-button"  href = {{url_for('auth.register')}}>Register</a>
+				{% if value == 1 %}
+				<a class="nav-button"  href = {{url_for('auth.logout')}}>Logout</a>
+				{% else %}
 				<a class="nav-button"  href = {{url_for('auth.login')}}>Login</a>
+				{% endif %}
 			</ul>
-
+			
 			<div class="burger">
 				<div class="line1"></div>
 				<div class="line2"></div>
@@ -52,17 +65,27 @@
 					{% for header in headings %}
 						<th>{{ header }}</th>
 					{% endfor %}
+					<th>Add to cart</th>
 					</tr>
 				</thead>
 				<tbody>
-						{% for row in data %}
+					{% for row in data %}
+					<form method="post" action="{{ url_for( "views.index" )}}">
 						<tr>
 							<td>{{row["brand"]}}</td>
-							<td>{{row["model"]}}</td>
+							<td>
+								<input type="hidden" name="model" value="{{ row["model"] }}">{{row["model"]}}
+							</td>
 							<td>{{row["size"]}}</td>
 							<td>{{row["resolution"]}}</td>
 							<td>{{row["price"]}}</td>
+							<td>{{row["stock"]}}</td>
+							<td>
+								<INPUT TYPE="NUMBER" name="NUMBER" MIN="1" MAX="100" STEP="1" VALUE="1" SIZE="1">
+								<button type="submit">Add</button>
+							</td>
 						</tr>
+					</form>
 						{% endfor %}
 				</tbody>
 			  </table>

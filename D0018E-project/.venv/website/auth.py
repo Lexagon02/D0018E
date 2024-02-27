@@ -51,6 +51,7 @@ def login():
        mail = request.form.get("mail")
        # getting input with name = lname in HTML form 
        password = request.form.get("pword") 
+       session["name"]=mail
        with loginCon:
             with loginCon.cursor() as cursorn:
                 # Read a single record
@@ -63,6 +64,11 @@ def login():
             return render_template("profile.html", data=result)
     else:
         return render_template("login.html")
+
+@auth.route("/logout", methods = ["GET", "POST"])
+def logout():
+    session["name"] = None
+    return render_template('login.html')
 
 @auth.route("/profile", methods = ["GET", "POST"])
 def profile():
@@ -165,6 +171,9 @@ def adminStuff():
 
 @auth.route("/cart", methods = ["GET", "POST"])
 def cart():
+    if not session.get("name"):
+        return render_template("login.html")
+    mail=session['name']
     heading = ['Brand', 'Model', 'Price','Amount']
     cartCon=connection()
     print(str(date.today()).replace('-',''))
@@ -207,5 +216,14 @@ def cart():
                         temp[0].update(input[i].items())
                         result=result+temp
                     return render_template("cart.html", headings=heading,data=result)
+
+    if request.method == "POST":
+       # getting input with name = fname in HTML form
+       mail = request.form.get("mail")
+       # getting input with name = lname in HTML form 
+       password = request.form.get("pword") 
+       return render_template("cart.html", headings=heading,data=result)
+    else:
+        return render_template("cart.html", headings=heading,data=result)
 
 
