@@ -39,14 +39,15 @@ def home():
             login=0
     else:
         login=1
-    print(login)
+        
     return render_template(
         "index.html",
         headings=headings,
         data=result,
         form = form,
-        value=login
-        
+
+        value = login
+
     )
 @views.route('/index', methods=["GET", "POST"])
 def index():
@@ -64,7 +65,7 @@ def index():
         return render_template("login.html")
     login=1
     mail=session.get("name")
-    print(login)
+
     with homeConnection:
         with homeConnection.cursor() as homeCursor:
             sql = "SELECT id FROM users WHERE mail = %s"
