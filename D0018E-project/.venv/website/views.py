@@ -81,7 +81,6 @@ def index():
             homeCursor.execute(sqlGet,(pid[0].get('productid'),uid[0].get('id'),amount))
             homeConnection.commit()
     return render_template('index.html',headings=headings, data=result, value=login, form=form)
-
 @views.route("/search", methods = ["POST"])
 def search():
     form = searchForm()
