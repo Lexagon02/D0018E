@@ -70,8 +70,7 @@
 				</thead>
 				<tbody>
 					{% for row in data %}
-					<form method="post" action="{{ url_for( "views.index" )}}">
-						<tr>
+					<form method="post" action="{{ url_for( "views.home" )}}">
 							<td>{{row["brand"]}}</td>
 							<td>
 								<input type="hidden" name="model" value="{{ row["model"] }}">{{row["model"]}}

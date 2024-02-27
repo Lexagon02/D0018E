@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, session, Response
 from website.classes import searchForm
+import pymysql.cursors
 WTF_CSRF_ENABLED = False
 
 views = Blueprint('views', __name__)
