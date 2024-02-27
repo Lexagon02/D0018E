@@ -29,10 +29,12 @@
 			<ul class="nav-links">
 				<button class="nav-button" onclick="toggleRules()">Filter</button>
 				<a class="nav-button"  href = {{url_for('auth.cart')}}>Cart</a>
-				<a class="nav-button"  href = {{url_for('auth.register')}}>Register</a>
+				
 				{% if value == 1 %}
+				<a class="nav-button"  href = {{url_for('auth.profile')}}>Profile</a>
 				<a class="nav-button"  href = {{url_for('auth.logout')}}>Logout</a>
 				{% else %}
+				<a class="nav-button"  href = {{url_for('auth.register')}}>Register</a>
 				<a class="nav-button"  href = {{url_for('auth.login')}}>Login</a>
 				{% endif %}
 			</ul>
@@ -70,8 +72,7 @@
 				</thead>
 				<tbody>
 					{% for row in data %}
-					<form method="post" action="{{ url_for( "views.index" )}}">
-						<tr>
+					<form method="post" action="{{ url_for( "views.home" )}}">
 							<td>{{row["brand"]}}</td>
 							<td>
 								<input type="hidden" name="model" value="{{ row["model"] }}">{{row["model"]}}
