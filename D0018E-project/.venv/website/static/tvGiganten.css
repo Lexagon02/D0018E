@@ -63,6 +63,25 @@ nav {
 	margin-bottom: 0px;
 }
 
+.checkout{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #edf2f4;
+	background-color: #d90429;
+	border: 2px solid #edf2f4;
+	border-radius: 50px/50px;
+	width:200px;
+	height:30px;
+	text-decoration: none;
+	letter-spacing: 3px;
+	cursor: pointer;
+	transition: all 0.3s ease-out;
+	font-weight: bold;
+	font-size: 14px;
+	margin:auto;
+}
+
 a:link { 
 	text-decoration: none; 
 	color: #edf2f4;
