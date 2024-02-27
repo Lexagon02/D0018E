@@ -111,6 +111,8 @@ def adminStuff():
 
     sqlTV =  "SELECT model, brand, size, resolution, price FROM `tv`"
     sqlUser =  "SELECT name, surname, mail, password, address, isAdmin FROM `users`"
+    sqlOrder =  "SELECT userid,orderid,date FROM `orders`"
+    sqlOrderUser =  "SELECT name, surname, mail, address FROM users WHERE id=%s"
     if request.method == "POST":
         if request.form["action"]=="AddTV":
             model = request.form.get("model")
@@ -156,6 +158,19 @@ def adminStuff():
                     cursorRemUser.execute(sqlUser)
                     userdata = cursorRemUser.fetchall()
                     adminRemUser.commit() 
+        if request.form["action"]=="DeleteOrder":
+            adminRemUser=connection()
+            order = request.form.get("orderRem")
+            with adminRemUser:
+                with adminRemUser.cursor() as cursorRemUser:
+                    sql3 = "DELETE FROM orders WHERE orderid=%s;"
+                    cursorRemUser.execute(sql3,(order))
+                    cursorRemUser.execute(sqlTV)
+                    result = cursorRemUser.fetchall()
+                    cursorRemUser.execute(sqlUser)
+                    userdata = cursorRemUser.fetchall()
+                    adminRemUser.commit() 
+
 
         return render_template("adminStuff.html",headings=heading,data=result)
     else:
@@ -166,8 +181,16 @@ def adminStuff():
                 result = cursorShowTV.fetchall()   
                 cursorShowTV.execute(sqlUser)
                 userdata = cursorShowTV.fetchall()
+                cursorShowTV.execute(sqlOrder)
+                orderdata = cursorShowTV.fetchall()
+                orderresult=[]
+                for order in orderdata:
+                    cursorShowTV.execute(sqlOrderUser,order.get('userid'))
+                    temp=cursorShowTV.fetchall()
+                    temp[0].update(order)
+                    orderresult=orderresult+temp
                 adminCon.commit() 
-    return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata)
+    return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata,orderdata=orderresult)
 
 @auth.route("/cart", methods = ["GET", "POST"])
 def cart():
@@ -176,7 +199,6 @@ def cart():
     mail=session['name']
     heading = ['Brand', 'Model', 'Price','Amount']
     cartCon=connection()
-    print(str(date.today()).replace('-',''))
     with cartCon:
             with cartCon.cursor() as cursorCart:
                 # Read a single record
@@ -194,14 +216,16 @@ def cart():
                     oid=1
                 sql = "SELECT productid,amount FROM cart WHERE userid = %s"
                 cursorCart.execute(sql,uid)
-
                 input = cursorCart.fetchall()
                 if request.method == "POST":
                     sql = "INSERT INTO orders (orderid,userid,date,productid,amount) VALUES(%s,%s,%s,%s,%s)"
                     sqlrem="DELETE FROM cart WHERE userid=%s"
+                    sqlremstock="UPDATE tv SET stock=stock-%s WHERE productid=%s AND stock>0"
+                    
                     for i in range(len(input)):
                         cursorCart.execute(sql,(oid+1,uid,str(date.today()).replace('-',''),input[i].get('productid'),input[i].get('amount')))
                         cursorCart.execute(sqlrem,uid)
+                        #cursorCart.execute(sqlremstock,input[i].get('amount'),input[i].get('productid'))
                         cartCon.commit()
                     return render_template("cart.html", headings=heading,data=result)
 
@@ -210,20 +234,10 @@ def cart():
                         sql= "SELECT brand,model,price FROM tv WHERE productid = %s"
                         cursorCart.execute(sql,input[i].get('productid'))
                         temp=cursorCart.fetchall()
-                        print(temp)
                         if temp == ():
                             return render_template("cart.html")
                         temp[0].update(input[i].items())
                         result=result+temp
                     return render_template("cart.html", headings=heading,data=result)
-
-    if request.method == "POST":
-       # getting input with name = fname in HTML form
-       mail = request.form.get("mail")
-       # getting input with name = lname in HTML form 
-       password = request.form.get("pword") 
-       return render_template("cart.html", headings=heading,data=result)
-    else:
-        return render_template("cart.html", headings=heading,data=result)
 
 
