@@ -156,6 +156,7 @@ def cart():
                 sql = "SELECT productid,amount FROM cart WHERE userid = %s"
                 cursorCart.execute(sql,uid[0].get('id'))
                 input = cursorCart.fetchall()
+<<<<<<< Updated upstream
                 print(input)
                 for i in range(len(input)):
                     sql= "SELECT brand,model,price FROM tv WHERE productid = %s"
@@ -168,6 +169,13 @@ def cart():
                     #print(temp[0])
                     result=result+temp
     #print(result)
+=======
+                input[0].get('productid')
+                sql2= "SELECT * FROM tv WHERE id = %s"
+                cursorCart.execute(sql2,id)
+                result=cursorCart.fetchall()
+                print(result)
+>>>>>>> Stashed changes
     if request.method == "POST":
        # getting input with name = fname in HTML form
        mail = request.form.get("mail")
