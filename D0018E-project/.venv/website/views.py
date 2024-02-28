@@ -45,9 +45,7 @@ def home():
         headings=headings,
         data=result,
         form = form,
-
         value = login
-
     )
 @views.route('/index', methods=["GET", "POST"])
 def index():
@@ -58,8 +56,7 @@ def index():
         serial = request.form.get("model",1)
         amount = request.form.get("NUMBER")
     amount = request.form.get("NUMBER")
-    print(amount)
-    print(session.get("name"))
+
     if not session.get("name"):
         login=0
         return render_template("login.html")
@@ -81,6 +78,7 @@ def index():
             homeCursor.execute(sqlGet,(pid[0].get('productid'),uid[0].get('id'),amount))
             homeConnection.commit()
     return render_template('index.html',headings=headings, data=result, value=login, form=form)
+
 @views.route("/search", methods = ["POST"])
 def search():
     form = searchForm()
