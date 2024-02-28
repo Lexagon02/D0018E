@@ -131,9 +131,16 @@ def adminStuff():
                     result = cursoraddTV.fetchall()
                     cursoraddTV.execute(sqlUser)
                     userdata= cursoraddTV.fetchall()
+                    cursoraddTV.execute(sqlOrder)
+                    orderdata = cursoraddTV.fetchall()
+                    orderresult=[]
+                    for order in orderdata:
+                        cursoraddTV.execute(sqlOrderUser,order.get('userid'))
+                        temp=cursoraddTV.fetchall()
+                        temp[0].update(order)
+                        orderresult=orderresult+temp
                     adminCon.commit() 
-            return render_template("adminStuff.html",headings=heading,data=result)
-        
+            
         if request.form["action"]=="DeleteTV":
             adminRem=connection()
             model = request.form.get("modelRem")
@@ -145,7 +152,16 @@ def adminStuff():
                     result = cursorRemTV.fetchall()
                     cursorRemTV.execute(sqlUser)
                     userdata = cursorRemTV.fetchall()
+                    cursorRemTV.execute(sqlOrder)
+                    orderdata = cursorRemTV.fetchall()
+                    orderresult=[]
+                    for order in orderdata:
+                        cursorRemTV.execute(sqlOrderUser,order.get('userid'))
+                        temp=cursorRemTV.fetchall()
+                        temp[0].update(order)
+                        orderresult=orderresult+temp
                     adminRem.commit() 
+                    
         if request.form["action"]=="DeleteUser":
             adminRemUser=connection()
             model = request.form.get("mailRem")
@@ -157,7 +173,16 @@ def adminStuff():
                     result = cursorRemUser.fetchall()
                     cursorRemUser.execute(sqlUser)
                     userdata = cursorRemUser.fetchall()
+                    cursorRemUser.execute(sqlOrder)
+                    orderdata = cursorRemUser.fetchall()
+                    orderresult=[]
+                    for order in orderdata:
+                        cursorRemUser.execute(sqlOrderUser,order.get('userid'))
+                        temp=cursorRemUser.fetchall()
+                        temp[0].update(order)
+                        orderresult=orderresult+temp
                     adminRemUser.commit() 
+                    
         if request.form["action"]=="DeleteOrder":
             adminRemUser=connection()
             order = request.form.get("orderRem")
@@ -169,10 +194,17 @@ def adminStuff():
                     result = cursorRemUser.fetchall()
                     cursorRemUser.execute(sqlUser)
                     userdata = cursorRemUser.fetchall()
-                    adminRemUser.commit() 
-
-
-        return render_template("adminStuff.html",headings=heading,data=result)
+                    cursorRemUser.execute(sqlOrder)
+                    orderdata = cursorRemUser.fetchall()
+                    orderresult=[]
+                    for order in orderdata:
+                        cursorRemUser.execute(sqlOrderUser,order.get('userid'))
+                        temp=cursorRemUser.fetchall()
+                        temp[0].update(order)
+                        orderresult=orderresult+temp
+                    adminRemUser.commit()
+                    
+        return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata,orderdata=orderresult) 
     else:
         with adminCon:
             with adminCon.cursor() as cursorShowTV:
