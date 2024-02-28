@@ -149,6 +149,11 @@ def adminStuff():
             with adminRem:
                 with adminRem.cursor() as cursorRemTV:
                     sql2 = "DELETE FROM tv WHERE model=%s;"
+                    sqlDelFromCart="DELETE FROM cart WHERE productid=%s"
+                    sqlGetPID="SELECT productid FROM tv WHERE model=%s"
+                    cursorRemTV.execute(sqlGetPID,model)
+                    pid=cursorRemTV.fetchall()
+                    cursorRemTV.execute(sqlDelFromCart,pid[0].get("productid"))
                     cursorRemTV.execute(sql2,(model))
                     cursorRemTV.execute(sqlTV)
                     result = cursorRemTV.fetchall()
@@ -166,11 +171,21 @@ def adminStuff():
                     
         if request.form["action"]=="DeleteUser":
             adminRemUser=connection()
-            model = request.form.get("mailRem")
+            mail = request.form.get("mailRem")
             with adminRemUser:
                 with adminRemUser.cursor() as cursorRemUser:
                     sql3 = "DELETE FROM users WHERE mail=%s;"
-                    cursorRemUser.execute(sql3,(model))
+                    sqlDelORder="DELETE FROM orders WHERE userid=%s"
+                    sqlUserID="SELECT id FROM users WHERE mail=%s"
+                    sqlDelCart="DELETE FROM cart WHERE userid=%s"
+                    cursorRemUser.execute(sqlUserID,mail)#get id from mail
+                    user=cursorRemUser.fetchall()
+                    cursorRemUser.execute(sqlDelORder,user[0].get('id'))#delete orders by user
+                    cursorRemUser.execute(sqlDelCart,user[0].get('id'))#delete users cart
+                    cursorRemUser.execute(sql3,(mail))#delete user
+                    
+
+                    #Load in all fields on adminpage
                     cursorRemUser.execute(sqlTV)
                     result = cursorRemUser.fetchall()
                     cursorRemUser.execute(sqlUser)
@@ -268,7 +283,6 @@ def cart():
             with cartCon.cursor() as cursorCart:
                 # Read a single record
                 result=[]
-                print(mail)
                 sql = "SELECT id FROM users WHERE mail = %s"
                 cursorCart.execute(sql,mail)
                 uid = cursorCart.fetchall()
