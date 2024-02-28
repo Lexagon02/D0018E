@@ -13,13 +13,7 @@
 	<!--<body onload="gameStart();">-->
 	
 		
-	</form>
-		<form method = "POST" action="{{url_for('views.search')}}">
-			{{ form.csrf_token }}
-		<input type = "search" placeholder = "Search"
- 			aria-label="Search", name = "searched">
-		<button type="submit">Search</button>	
-	</form>
+
 
 		<nav>
 			<div class="logo">
@@ -58,7 +52,15 @@
 
 			</div>
 		</div>
-
+		<div class = "searchbutton">
+			<form method = "POST" action="{{url_for('views.search')}}">
+				{{ form.csrf_token }}
+			<input type = "search" placeholder = "Search"
+			 	aria-label="Search", name = "searched" >
+				<button type="submit">Search</button>	
+			</form>
+		</div>
+			
 
 		<div class="game-container" id="game-container">
 			<table>
@@ -72,7 +74,7 @@
 				</thead>
 				<tbody>
 					{% for row in data %}
-					<form method="post" action="{{ url_for( "views.home" )}}">
+					<form method="post" action="{{ url_for( "views.index" )}}">
 							<td>{{row["brand"]}}</td>
 							<td>
 								<input type="hidden" name="model" value="{{ row["model"] }}">{{row["model"]}}
