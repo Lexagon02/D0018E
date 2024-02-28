@@ -115,6 +115,7 @@ def adminStuff():
     sqlOrderUser =  "SELECT name, surname, mail, address FROM users WHERE id=%s"
     sqlGetModel="SELECT model,brand FROM tv WHERE productid=%s"
     if request.method == "POST":
+        checkorderresult={}
         if request.form["action"]=="AddTV":
             model = request.form.get("model")
             brand = request.form.get("brand")
