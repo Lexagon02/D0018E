@@ -142,5 +142,40 @@
           </table>
           
     </div>
+    <div class = "registerform">
+        <h1>Check order</h1>
+        <label for="orderCheck">OrderID:</label>
+        <input type="text" id="orderCheck" name="orderCheck">
+        <button class="nav-button" type="submit" name="action" value="CheckOrder">Check</button>
+    </div>
+    <div class="game-container" id="game-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>ProductID</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                    {% for row in checkorderdata %}
+                    <tr>
+                        <td>{{row["name"]}}</td>
+                        <td>{{row["surname"]}}</td>
+                        <td>{{row["mail"]}}</td>
+                        <td>{{row["brand"]}}</td>
+                        <td>{{row["model"]}}</td>
+                        <td>{{row["productid"]}}</td>
+                        <td>{{row["amount"]}}</td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+          </table>
+          
+    </div>
     </form>
 </html>
