@@ -65,17 +65,36 @@ def index():
 
     with homeConnection:
         with homeConnection.cursor() as homeCursor:
+            
             sql = "SELECT id FROM users WHERE mail = %s"
             homeCursor.execute(sql,mail)
             uid = homeCursor.fetchall()
+            
             sql = "SELECT productid FROM tv WHERE model = %s"
             homeCursor.execute(sql,serial)
-            pid = homeCursor.fetchall()
-            sqlGet = "INSERT INTO cart (id, productid, userid, amount) VALUES (1, %s, %s, %s)"
+            pid = homeCursor.fetchone()
+
+            sql = "SELECT amount FROM cart WHERE userid = %s AND productid = %s"
+            print(uid)
+            print(pid)
+            homeCursor.execute(sql,(uid[0].get("id"),pid.get("productid")))
+            stockAmount = homeCursor.fetchall()
+            print(stockAmount)
+            
+            if(stockAmount != ()):
+                sql = "UPDATE cart SET amount = %s WHERE userid = %s AND productid = %s"
+                print(int(stockAmount[0].get("amount"))+int(amount))
+                homeCursor.execute(sql,((int(stockAmount[0].get("amount"))+int(amount)),uid[0].get("id"),pid.get("productid")))
+                #result = homeCursor.fetchall()
+                homeConnection.commit()
+                
+            else:
+                sqlGet = "INSERT INTO cart (id, productid, userid, amount) VALUES (1, %s, %s, %s)"
+                homeCursor.execute(sqlGet,(pid.get('productid'),uid[0].get('id'),amount))
+            
             sql = "SELECT model, brand, size, resolution, price, stock FROM tv"
             homeCursor.execute(sql)
             result = homeCursor.fetchall()
-            homeCursor.execute(sqlGet,(pid[0].get('productid'),uid[0].get('id'),amount))
             homeConnection.commit()
     return render_template('index.html',headings=headings, data=result, value=login, form=form)
 
