@@ -64,6 +64,13 @@ nav {
 	margin-bottom: 0px;
 }
 
+.searchbutton {
+	display: flex;
+	margin-bottom: -3%;
+	justify-content: center;
+	padding-top: 1%;
+  }
+ 
 .checkout{
 	display: flex;
 	justify-content: center;

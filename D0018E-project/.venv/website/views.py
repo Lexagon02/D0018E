@@ -36,7 +36,7 @@ def home():
 
     headings = ['Model', 'Brand', 'Size', 'Resolution', 'Price', 'Stock']
     if not session.get("name"):
-            login=0
+        login=0
     else:
         login=1
         
@@ -109,10 +109,11 @@ def search():
         searches = form.searched.data
         with c:
             with c.cursor() as cursors:
-                sql = "Select * FROM tv WHERE Brand Like (%% + %%s + %%);"
+                sql = "Select * FROM tv WHERE brand LIKE ('%%' %s '%%') or model like ('%%' %s '%%') or size like ('%%' %s '%%') or price like ('%%' %s '%%');"
+                
                 print(sql)
                 print(searches)
-                cursors.execute(sql,searches)
+                cursors.execute(sql,(searches,searches,searches,searches))
                 result = cursors.fetchall()
                 print(result)
                 return render_template("index.html", form = form, headings= headings, data = result)
