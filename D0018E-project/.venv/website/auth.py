@@ -60,7 +60,7 @@ def login():
                 result = cursorn.fetchall()
                 if(result==()):
                     return render_template("login.html")
-                
+                loginCon.commit()
             return render_template("profile.html", data=result)
     else:
         return render_template("login.html")
@@ -101,7 +101,7 @@ def profile():
                     if data[i] == '':
                         continue
                     cursorp.execute(sql,session["name"])
-           
+                profileCon.commit()
                 return render_template("profile.html")
 
 @auth.route("/adminStuff", methods = ["GET", "POST"])
@@ -270,6 +270,7 @@ def cart():
                             return render_template("cart.html")
                         temp[0].update(input[i].items())
                         result=result+temp
+                        cursorCart.commit()
                     return render_template("cart.html", headings=heading,data=result)
 
 

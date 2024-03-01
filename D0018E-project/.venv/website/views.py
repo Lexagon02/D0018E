@@ -116,9 +116,12 @@ def search():
                 cursors.execute(sql,(searches,searches,searches,searches))
                 result = cursors.fetchall()
                 print(result)
+                c.commit()
                 return render_template("index.html", form = form, headings= headings, data = result)
     else:
         r = home()
+        c.commit()
         return r
         #return render_template("index.html" , form = form,headings= headings, data = result)
+    
 
