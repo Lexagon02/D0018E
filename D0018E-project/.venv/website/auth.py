@@ -77,7 +77,7 @@ def profile():
     profileCon=connection()
     with profileCon:
         with profileCon.cursor() as cursorp:
-            sql="SELECT * FROM users WHERE mail=%s"
+            sqluser="SELECT * FROM users WHERE mail=%s"
             if request.method == "GET":
                 cursorp.execute(sql,session["name"])
                 result=cursorp.fetchall()
@@ -105,10 +105,11 @@ def profile():
                         set_clause = header[i]
                         # Using placeholders for column names without single quotes
                         cursorp.execute(sql.format(set_clause), (data[i], session["name"]))
-                profileCon.commit()
-                cursorp.execute(sql,session["name"])
+                
+                cursorp.execute(sqluser,session["name"])
                 result=cursorp.fetchall()
                 isAdmin=result[0].get('isAdmin')
+                profileCon.commit()
                 return render_template("profile.html",isAdmin=isAdmin,data=result)
 
 @auth.route("/adminStuff", methods = ["GET", "POST"])
