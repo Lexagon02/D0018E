@@ -3,9 +3,9 @@ from flask_session import Session
 from datetime import date
 import pymysql.cursors
 def connection():
-    connection = pymysql.connect(host='d0018e-database.cvwk6aiy4nnq.eu-north-1.rds.amazonaws.com',
+    connection = pymysql.connect(host='database-1.c1uyikioggel.eu-north-1.rds.amazonaws.com',
                                  user='admin',
-                                 password='ltu1234567',
+                                 password='LTU123456',
                                  database='database',
                                  cursorclass=pymysql.cursors.DictCursor)
     return connection

@@ -12,9 +12,9 @@ views = Blueprint('views', __name__)
 
 # Connect to the database
 def connection():
-    connection = pymysql.connect(host='d0018e-database.cvwk6aiy4nnq.eu-north-1.rds.amazonaws.com',
+    connection = pymysql.connect(host='database-1.c1uyikioggel.eu-north-1.rds.amazonaws.com',
                                  user='admin',
-                                 password='ltu1234567',
+                                 password='LTU123456',
                                  database='database',
                                  cursorclass=pymysql.cursors.DictCursor)
     return connection
@@ -75,16 +75,21 @@ def index():
             pid = homeCursor.fetchone()
 
             sql = "SELECT amount FROM cart WHERE userid = %s AND productid = %s"
-            print(uid)
-            print(pid)
             homeCursor.execute(sql,(uid[0].get("id"),pid.get("productid")))
             stockAmount = homeCursor.fetchall()
-            print(stockAmount)
             
             if(stockAmount != ()):
-                sql = "UPDATE cart SET amount = %s WHERE userid = %s AND productid = %s"
-                print(int(stockAmount[0].get("amount"))+int(amount))
-                homeCursor.execute(sql,((int(stockAmount[0].get("amount"))+int(amount)),uid[0].get("id"),pid.get("productid")))
+                sql = "SELECT amount FROM cart WHERE userid = %s AND productid = %s"
+                sql2 = "Select stock from tv where productid = %s"
+                homeCursor.execute(sql,(uid[0].get("id"),pid.get("productid")))
+                cart = homeCursor.fetchall()
+                homeCursor.execute(sql2,pid.get("productid"))
+                stock = homeCursor.fetchall()
+                if(int(stock[0].get("stock")) >= (int(amount) + int(cart[0].get("amount")))):
+                    sqlGet = "UPDATE cart SET amount = %s WHERE userid = %s AND productid = %s"
+                    homeCursor.execute(sqlGet,((int(stockAmount[0].get("amount"))+int(amount)),uid[0].get("id"),pid.get("productid")))
+                else:
+                    pass
                 #result = homeCursor.fetchall()
                 homeConnection.commit()
                 
