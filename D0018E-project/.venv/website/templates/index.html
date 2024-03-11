@@ -21,7 +21,6 @@
 			</div>
 			
 			<ul class="nav-links">
-				<button class="nav-button" onclick="toggleRules()">Filter</button>
 				<a class="nav-button"  href = {{url_for('auth.cart')}}>Cart</a>
 				
 				{% if value == 1 %}
@@ -44,8 +43,6 @@
 			<div class="overlay"></div>
 			<div class="content">
 
-				<div class="close-btn" onclick="toggleRules()">&times;</div>
-				<h1>Filter</h1>
 				<ol class="rules">
 
 				</ol>
