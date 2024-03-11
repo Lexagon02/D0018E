@@ -95,12 +95,16 @@ def profile():
                 # getting input with name = fname in HTML form
                 password = request.form.get("pword")
                 header=["name","surname","mail","password","address"]
+                print(address)
                 data=[first_name,surname,mail,password,address]
-                sql="UPDATE users SET %s = %s WHERE mail=%s"
-                for  i in range(5):
-                    if data[i] == '':
-                        continue
-                    cursorp.execute(sql,(header[i],data[i],session["name"]))
+                sql = "UPDATE users SET {} = %s WHERE mail = %s"
+
+                for i in range(5):
+                    if data[i] != '':
+            # Constructing the SET clause dynamically
+                        set_clause = header[i]
+            # Using placeholders for column names without single quotes
+                        cursorp.execute(sql.format(set_clause), (data[i], session["name"]))
                 profileCon.commit()
                 return render_template("profile.html")
 
