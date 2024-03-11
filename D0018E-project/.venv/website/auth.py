@@ -79,7 +79,7 @@ def profile():
         with profileCon.cursor() as cursorp:
             sqluser="SELECT * FROM users WHERE mail=%s"
             if request.method == "GET":
-                cursorp.execute(sql,session["name"])
+                cursorp.execute(sqluser,session["name"])
                 result=cursorp.fetchall()
                 isAdmin=result[0].get('isAdmin')
                 return render_template("profile.html",isAdmin=isAdmin,data=result)
@@ -315,12 +315,11 @@ def cart():
                     for i in range(len(input)):
                         cursorCart.execute(sqlStock,(input[i].get('productid')))
                         stock=cursorCart.fetchall()
-                        print(stock)
-                        if(stock[0].get('stock')>input[i].get('amount') and stock[0].get('active')==1):
+                        if(stock[0].get('stock')>=input[i].get('amount') and stock[0].get('active')==1):
                             cursorCart.execute(sql,(oid+1,uid,str(date.today()).replace('-',''),input[i].get('productid'),input[i].get('amount')))
-                            cursorCart.execute(sqlrem,uid)
                             cursorCart.execute(sqlremstock,(input[i].get('amount'),input[i].get('productid')))
-                        cartCon.commit()
+                    cursorCart.execute(sqlrem,uid)
+                    cartCon.commit()
                     return render_template("cart.html", headings=heading,data=result)
 
                 else:
