@@ -275,7 +275,7 @@ def cart():
                             return render_template("cart.html")
                         temp[0].update(input[i].items())
                         result=result+temp
-                        cursorCart.commit()
+                        cartCon.commit()
                     return render_template("cart.html", headings=heading,data=result)
 
 
