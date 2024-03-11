@@ -84,7 +84,7 @@
 							<td>{{row["price"]}}</td>
 							<td>{{row["stock"]}}</td>
 							<td>
-								<INPUT TYPE="NUMBER" name="NUMBER" MIN="1" MAX="100" STEP="1" VALUE="1" SIZE="1">
+								<INPUT TYPE="NUMBER" name="NUMBER" MIN="1" MAX={{row["stock"]}} STEP="1" VALUE="1" SIZE="1">
 								<button type="submit">Add</button>
 							</td>
 						</tr>

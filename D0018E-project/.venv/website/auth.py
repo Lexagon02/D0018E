@@ -96,11 +96,11 @@ def profile():
                 password = request.form.get("pword")
                 header=["name","surname","mail","password","address"]
                 data=[first_name,surname,mail,password,address]
-                sql="UPDATE users SET password = 123 WHERE mail=%s"
+                sql="UPDATE users SET %s = %s WHERE mail=%s"
                 for  i in range(5):
                     if data[i] == '':
                         continue
-                    cursorp.execute(sql,session["name"])
+                    cursorp.execute(sql,(header[i],data[i],session["name"]))
                 profileCon.commit()
                 return render_template("profile.html")
 
@@ -109,7 +109,7 @@ def adminStuff():
     adminCon=connection()
     heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price']
 
-    sqlTV =  "SELECT model, brand, size, resolution, price FROM `tv`"
+    sqlTV =  "SELECT model, brand, size, resolution, price FROM `tv` WHERE active = 1"
     sqlUser =  "SELECT name, surname, mail, password, address, isAdmin FROM `users`"
     sqlOrder =  "SELECT userid,orderid,date FROM `orders`"
     sqlOrderUser =  "SELECT name, surname, mail, address FROM users WHERE id=%s"
@@ -146,8 +146,9 @@ def adminStuff():
             model = request.form.get("modelRem")
             with adminRem:
                 with adminRem.cursor() as cursorRemTV:
-                    sql2 = "DELETE FROM tv WHERE model=%s;"
-                    cursorRemTV.execute(sql2,(model))
+                    sqlDelTv = "UPDATE tv SET active=0 WHERE model=%s"
+                    cursorRemTV.execute(sqlDelTv,(model))
+                    
                     cursorRemTV.execute(sqlTV)
                     result = cursorRemTV.fetchall()
                     cursorRemTV.execute(sqlUser)
@@ -250,14 +251,18 @@ def cart():
                 cursorCart.execute(sql,uid)
                 input = cursorCart.fetchall()
                 if request.method == "POST":
+                    sqlStock="SELECT stock FROM tv WHERE productid =%s"
                     sql = "INSERT INTO orders (orderid,userid,date,productid,amount) VALUES(%s,%s,%s,%s,%s)"
                     sqlrem="DELETE FROM cart WHERE userid=%s"
                     sqlremstock="UPDATE tv SET stock=stock-%s WHERE productid=%s AND stock>0"
                     
                     for i in range(len(input)):
-                        cursorCart.execute(sql,(oid+1,uid,str(date.today()).replace('-',''),input[i].get('productid'),input[i].get('amount')))
-                        cursorCart.execute(sqlrem,uid)
-                        cursorCart.execute(sqlremstock,(input[i].get('amount'),input[i].get('productid')))
+                        cursorCart.execute(sqlStock,(input[i].get('productid')))
+                        stock=cursorCart.fetchall()
+                        if(stock[0].get('stock')>input[i].get('amount')):
+                            cursorCart.execute(sql,(oid+1,uid,str(date.today()).replace('-',''),input[i].get('productid'),input[i].get('amount')))
+                            cursorCart.execute(sqlrem,uid)
+                            cursorCart.execute(sqlremstock,(input[i].get('amount'),input[i].get('productid')))
                         cartCon.commit()
                     return render_template("cart.html", headings=heading,data=result)
 
