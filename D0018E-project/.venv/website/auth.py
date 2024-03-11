@@ -31,16 +31,26 @@ def register():
        
        with registerCon:
         with registerCon.cursor() as cursors:
-            # Read a single record
-            sql = "INSERT INTO users (name,surname,mail,password,address,isAdmin) VALUES (%s,%s,%s,%s,%s,0);"
-            cursors.execute(sql,(first_name,surname,mail,password,address))
-            sql = "SELECT name,surname,isAdmin FROM users WHERE mail = %s AND password = %s"
-            cursors.execute(sql,(mail,password))
+            sql= "SELECT * FROM users where mail = %s"
+            cursors.execute(sql,mail)
             result = cursors.fetchall()
-            registerCon.commit()
+            print(result)
+            if(len(result)==0):
+
+
+            # Read a single record
+                sql = "INSERT INTO users (name,surname,mail,password,address,isAdmin) VALUES (%s,%s,%s,%s,%s,0);"
+                cursors.execute(sql,(first_name,surname,mail,password,address))
+                sql = "SELECT name,surname,isAdmin FROM users WHERE mail = %s AND password = %s"
+                cursors.execute(sql,(mail,password))
+                result = cursors.fetchall()
+                return render_template("profile.html", data=result)
+            else:
+                pass
+            registerCon.commit() 
             
        
-       return render_template("profile.html", data=result)
+       
     return render_template("register.html")
 
 @auth.route("/login", methods = ["GET", "POST"])
@@ -79,7 +89,7 @@ def profile():
         with profileCon.cursor() as cursorp:
             sqluser="SELECT * FROM users WHERE mail=%s"
             if request.method == "GET":
-                cursorp.execute(sql,session["name"])
+                cursorp.execute(sqluser,session["name"])
                 result=cursorp.fetchall()
                 isAdmin=result[0].get('isAdmin')
                 return render_template("profile.html",isAdmin=isAdmin,data=result)
