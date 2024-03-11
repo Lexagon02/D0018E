@@ -60,7 +60,7 @@ def login():
                 result = cursorn.fetchall()
                 if(result==()):
                     return render_template("login.html")
-                
+                loginCon.commit()
             return render_template("profile.html", data=result)
     else:
         return render_template("login.html")
@@ -101,7 +101,7 @@ def profile():
                     if data[i] == '':
                         continue
                     cursorp.execute(sql,(header[i],data[i],session["name"]))
-           
+                profileCon.commit()
                 return render_template("profile.html")
 
 @auth.route("/adminStuff", methods = ["GET", "POST"])
@@ -111,11 +111,9 @@ def adminStuff():
 
     sqlTV =  "SELECT model, brand, size, resolution, price FROM `tv` WHERE active = 1"
     sqlUser =  "SELECT name, surname, mail, password, address, isAdmin FROM `users`"
-    sqlOrder =  "SELECT userid,orderid,date FROM `orders` GROUP BY orderid ORDER BY orderid"
+    sqlOrder =  "SELECT userid,orderid,date FROM `orders`"
     sqlOrderUser =  "SELECT name, surname, mail, address FROM users WHERE id=%s"
-    sqlGetModel="SELECT model,brand FROM tv WHERE productid=%s"
     if request.method == "POST":
-        checkorderresult={}
         if request.form["action"]=="AddTV":
             model = request.form.get("model")
             brand = request.form.get("brand")
@@ -123,7 +121,7 @@ def adminStuff():
             res = request.form.get("res")
             price = request.form.get("price")
             stock = request.form.get("stock") 
-            
+    
             with adminCon:
                 with adminCon.cursor() as cursoraddTV:
                     # Read a single record
@@ -148,7 +146,6 @@ def adminStuff():
             model = request.form.get("modelRem")
             with adminRem:
                 with adminRem.cursor() as cursorRemTV:
-                    
                     sqlDelTv = "UPDATE tv SET active=0 WHERE model=%s"
                     cursorRemTV.execute(sqlDelTv,(model))
                     
@@ -168,21 +165,11 @@ def adminStuff():
                     
         if request.form["action"]=="DeleteUser":
             adminRemUser=connection()
-            mail = request.form.get("mailRem")
+            model = request.form.get("mailRem")
             with adminRemUser:
                 with adminRemUser.cursor() as cursorRemUser:
                     sql3 = "DELETE FROM users WHERE mail=%s;"
-                    sqlDelORder="DELETE FROM orders WHERE userid=%s"
-                    sqlUserID="SELECT id FROM users WHERE mail=%s"
-                    sqlDelCart="DELETE FROM cart WHERE userid=%s"
-                    cursorRemUser.execute(sqlUserID,mail)#get id from mail
-                    user=cursorRemUser.fetchall()
-                    cursorRemUser.execute(sqlDelORder,user[0].get('id'))#delete orders by user
-                    cursorRemUser.execute(sqlDelCart,user[0].get('id'))#delete users cart
-                    cursorRemUser.execute(sql3,(mail))#delete user
-                    
-
-                    #Load in all fields on adminpage
+                    cursorRemUser.execute(sql3,(model))
                     cursorRemUser.execute(sqlTV)
                     result = cursorRemUser.fetchall()
                     cursorRemUser.execute(sqlUser)
@@ -217,39 +204,8 @@ def adminStuff():
                         temp[0].update(order)
                         orderresult=orderresult+temp
                     adminRemUser.commit()
-        if request.form["action"]=="CheckOrder":
-            adminRemUser=connection()
-            order = request.form.get("orderCheck")
-            with adminRemUser:
-                with adminRemUser.cursor() as cursorRemUser:
-                    sql3 = "SELECT * FROM orders WHERE orderid=%s;"
-                    cursorRemUser.execute(sql3,(order))
-                    checkorderdata=cursorRemUser.fetchall()
-                    checkorderresult=[]
-                    for order in checkorderdata:
-                        cursorRemUser.execute(sqlOrderUser,order.get('userid'))
-                        temp=cursorRemUser.fetchall()
-                        temp[0].update(order)
-                        cursorRemUser.execute(sqlGetModel,order.get('productid'))
-                        temp2=cursorRemUser.fetchall()
-                        temp2[0].update(temp[0])
-                        checkorderresult=checkorderresult+temp2
                     
-                    cursorRemUser.execute(sqlTV)
-                    result = cursorRemUser.fetchall()
-                    cursorRemUser.execute(sqlUser)
-                    userdata = cursorRemUser.fetchall()
-                    cursorRemUser.execute(sqlOrder)
-                    orderdata = cursorRemUser.fetchall()
-                    orderresult=[]
-                    for order in orderdata:
-                        cursorRemUser.execute(sqlOrderUser,order.get('userid'))
-                        temp=cursorRemUser.fetchall()
-                        temp[0].update(order)
-                        orderresult=orderresult+temp
-                    adminRemUser.commit()
-                    
-        return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata,orderdata=orderresult,checkorderdata=checkorderresult) 
+        return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata,orderdata=orderresult) 
     else:
         with adminCon:
             with adminCon.cursor() as cursorShowTV:
@@ -280,6 +236,7 @@ def cart():
             with cartCon.cursor() as cursorCart:
                 # Read a single record
                 result=[]
+                print(mail)
                 sql = "SELECT id FROM users WHERE mail = %s"
                 cursorCart.execute(sql,mail)
                 uid = cursorCart.fetchall()
@@ -318,6 +275,7 @@ def cart():
                             return render_template("cart.html")
                         temp[0].update(input[i].items())
                         result=result+temp
+                        cursorCart.commit()
                     return render_template("cart.html", headings=heading,data=result)
 
 
