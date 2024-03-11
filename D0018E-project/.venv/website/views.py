@@ -30,11 +30,11 @@ def home():
 
         with c.cursor() as cursor:
             # Read a single record
-            sql = "SELECT model, brand, size, resolution, price, stock FROM tv"
+            sql = "SELECT model, brand, size, resolution, price, stock FROM tv WHERE active=1"
             cursor.execute(sql)
             result = cursor.fetchall()
 
-    headings = ['Model', 'Brand', 'Size', 'Resolution', 'Price', 'Stock']
+    headings = ['Brand', 'Model', 'Size', 'Resolution', 'Price', 'Stock']
     if not session.get("name"):
         login=0
     else:
@@ -51,7 +51,7 @@ def home():
 def index():
     form = addForm()
     homeConnection = connection()
-    headings = ['Model', 'Brand', 'Size', 'Resolution', 'Price', 'Stock']
+    headings = ['Brand', 'Model', 'Size', 'Resolution', 'Price', 'Stock']
     if request.method == "POST":
         serial = request.form.get("model",1)
         amount = request.form.get("NUMBER")
@@ -107,14 +107,14 @@ def index():
 def search():
     form = searchForm()
     c = connection()
-    headings = ['Model', 'Brand', 'Size', 'Resolution', 'Price','Stock']
+    headings = ['Brand', 'Model', 'Size', 'Resolution', 'Price','Stock']
 
 
     if form.validate_on_submit():
         searches = form.searched.data
         with c:
             with c.cursor() as cursors:
-                sql = "Select * FROM tv WHERE brand LIKE ('%%' %s '%%') or model like ('%%' %s '%%') or size like ('%%' %s '%%') or price like ('%%' %s '%%');"
+                sql = "Select * FROM tv WHERE brand LIKE ('%%' %s '%%') AND active=1 or model like ('%%' %s '%%') AND active=1 or size like ('%%' %s '%%') AND active=1 or price like ('%%' %s '%%') AND active=1;"
                 
                 print(sql)
                 print(searches)

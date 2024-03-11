@@ -251,15 +251,15 @@ def cart():
                 cursorCart.execute(sql,uid)
                 input = cursorCart.fetchall()
                 if request.method == "POST":
-                    sqlStock="SELECT stock FROM tv WHERE productid =%s"
+                    sqlStock="SELECT stock,active FROM tv WHERE productid =%s"
                     sql = "INSERT INTO orders (orderid,userid,date,productid,amount) VALUES(%s,%s,%s,%s,%s)"
                     sqlrem="DELETE FROM cart WHERE userid=%s"
                     sqlremstock="UPDATE tv SET stock=stock-%s WHERE productid=%s AND stock>0"
-                    
                     for i in range(len(input)):
                         cursorCart.execute(sqlStock,(input[i].get('productid')))
                         stock=cursorCart.fetchall()
-                        if(stock[0].get('stock')>input[i].get('amount')):
+                        print(stock)
+                        if(stock[0].get('stock')>input[i].get('amount') and stock[0].get('active')==1):
                             cursorCart.execute(sql,(oid+1,uid,str(date.today()).replace('-',''),input[i].get('productid'),input[i].get('amount')))
                             cursorCart.execute(sqlrem,uid)
                             cursorCart.execute(sqlremstock,(input[i].get('amount'),input[i].get('productid')))
@@ -268,7 +268,7 @@ def cart():
 
                 else:
                     for i in range(len(input)):
-                        sql= "SELECT brand,model,price FROM tv WHERE productid = %s"
+                        sql= "SELECT brand,model,price FROM tv WHERE productid = %s AND active=1"
                         cursorCart.execute(sql,input[i].get('productid'))
                         temp=cursorCart.fetchall()
                         if temp == ():
