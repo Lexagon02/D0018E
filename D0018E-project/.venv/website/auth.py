@@ -3,9 +3,9 @@ from flask_session import Session
 from datetime import date
 import pymysql.cursors
 def connection():
-    connection = pymysql.connect(host='d0018e-database.cvwk6aiy4nnq.eu-north-1.rds.amazonaws.com',
+    connection = pymysql.connect(host='database-1.c1uyikioggel.eu-north-1.rds.amazonaws.com',
                                  user='admin',
-                                 password='ltu1234567',
+                                 password='LTU123456',
                                  database='database',
                                  cursorclass=pymysql.cursors.DictCursor)
     return connection
@@ -109,7 +109,7 @@ def adminStuff():
     adminCon=connection()
     heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price']
 
-    sqlTV =  "SELECT model, brand, size, resolution, price FROM `tv`"
+    sqlTV =  "SELECT model, brand, size, resolution, price FROM `tv` WHERE active = 1"
     sqlUser =  "SELECT name, surname, mail, password, address, isAdmin FROM `users`"
     sqlOrder =  "SELECT userid,orderid,date FROM `orders` GROUP BY orderid ORDER BY orderid"
     sqlOrderUser =  "SELECT name, surname, mail, address FROM users WHERE id=%s"
@@ -148,13 +148,10 @@ def adminStuff():
             model = request.form.get("modelRem")
             with adminRem:
                 with adminRem.cursor() as cursorRemTV:
-                    sql2 = "DELETE FROM tv WHERE model=%s;"
-                    sqlDelFromCart="DELETE FROM cart WHERE productid=%s"
-                    sqlGetPID="SELECT productid FROM tv WHERE model=%s"
-                    cursorRemTV.execute(sqlGetPID,model)
-                    pid=cursorRemTV.fetchall()
-                    cursorRemTV.execute(sqlDelFromCart,pid[0].get("productid"))
-                    cursorRemTV.execute(sql2,(model))
+                    
+                    sqlDelTv = "UPDATE tv SET active=0 WHERE model=%s"
+                    cursorRemTV.execute(sqlDelTv,(model))
+                    
                     cursorRemTV.execute(sqlTV)
                     result = cursorRemTV.fetchall()
                     cursorRemTV.execute(sqlUser)

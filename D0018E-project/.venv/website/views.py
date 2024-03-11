@@ -12,9 +12,9 @@ views = Blueprint('views', __name__)
 
 # Connect to the database
 def connection():
-    connection = pymysql.connect(host='d0018e-database.cvwk6aiy4nnq.eu-north-1.rds.amazonaws.com',
+    connection = pymysql.connect(host='database-1.c1uyikioggel.eu-north-1.rds.amazonaws.com',
                                  user='admin',
-                                 password='ltu1234567',
+                                 password='LTU123456',
                                  database='database',
                                  cursorclass=pymysql.cursors.DictCursor)
     return connection
