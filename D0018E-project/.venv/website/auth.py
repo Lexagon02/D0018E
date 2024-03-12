@@ -42,7 +42,7 @@ def register():
                 sql = "INSERT INTO users (name,surname,mail,password,address,isAdmin) VALUES (%s,%s,%s,%s,%s,0);"
                 cursors.execute(sql,(first_name,surname,mail,password,address))
                 print("here")
-                sql = "SELECT name,surname,isAdmin FROM users WHERE mail = %s AND password = %s"
+                sql = "SELECT name,surname,password,address,isAdmin FROM users WHERE mail = %s AND password = %s"
                 cursors.execute(sql,(mail,password))
                 result = cursors.fetchall()
                 registerCon.commit() 
@@ -67,7 +67,7 @@ def login():
        with loginCon:
             with loginCon.cursor() as cursorn:
                 # Read a single record
-                sql = "SELECT name,surname,isAdmin FROM users WHERE mail = %s AND password = %s"
+                sql = "SELECT name,surname,password,address,isAdmin FROM users WHERE mail = %s AND password = %s"
                 cursorn.execute(sql,(mail,password))
                 result = cursorn.fetchall()
                 if(result==()):
@@ -345,5 +345,3 @@ def cart():
                         result=result+temp
                         cartCon.commit()
                     return render_template("cart.html", headings=heading,data=result)
-
-
