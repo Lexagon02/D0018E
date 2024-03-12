@@ -106,9 +106,9 @@ def profile():
                 address = request.form.get("address")
                 # getting input with name = fname in HTML form
                 password = request.form.get("pword")
-                header=["name","surname","mail","password","address"]
+                header=["name","surname","password","address"]
                 print(address)
-                data=[first_name,surname,mail,password,address]
+                data=[first_name,surname,password,address]
                 sql = "UPDATE users SET {} = %s WHERE mail = %s"
 
                 for i in range(4):
