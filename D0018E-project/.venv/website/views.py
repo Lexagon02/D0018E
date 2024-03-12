@@ -108,8 +108,11 @@ def search():
     form = searchForm()
     c = connection()
     headings = ['Brand', 'Model', 'Size', 'Resolution', 'Price','Stock']
-
-
+    if not session.get("name"):
+        login=0
+        return render_template("login.html")
+    login=1
+    mail=session.get("name")
     if form.validate_on_submit():
         searches = form.searched.data
         with c:
@@ -122,7 +125,7 @@ def search():
                 result = cursors.fetchall()
                 print(result)
                 c.commit()
-                return render_template("index.html", form = form, headings= headings, data = result)
+                return render_template("index.html", form = form, headings= headings,value=login, data = result)
     else:
         r = home()
         c.commit()
