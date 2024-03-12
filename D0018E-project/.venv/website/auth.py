@@ -35,19 +35,21 @@ def register():
             cursors.execute(sql,mail)
             result = cursors.fetchall()
             print(result)
+            print(len(result))
             if(len(result)==0):
-
-
             # Read a single record
+                print("-------")
                 sql = "INSERT INTO users (name,surname,mail,password,address,isAdmin) VALUES (%s,%s,%s,%s,%s,0);"
                 cursors.execute(sql,(first_name,surname,mail,password,address))
+                print("here")
                 sql = "SELECT name,surname,isAdmin FROM users WHERE mail = %s AND password = %s"
                 cursors.execute(sql,(mail,password))
                 result = cursors.fetchall()
+                registerCon.commit() 
                 return render_template("profile.html", data=result)
             else:
                 pass
-            registerCon.commit() 
+                registerCon.commit() 
             
        
        
@@ -109,7 +111,7 @@ def profile():
                 data=[first_name,surname,mail,password,address]
                 sql = "UPDATE users SET {} = %s WHERE mail = %s"
 
-                for i in range(5):
+                for i in range(4):
                     if data[i] != '':
                         # Constructing the SET clause dynamically
                         set_clause = header[i]
