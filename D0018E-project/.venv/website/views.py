@@ -85,10 +85,11 @@ def index():
                 cart = homeCursor.fetchall()
                 homeCursor.execute(sql2,pid.get("productid"))
                 stock = homeCursor.fetchall()
+                sqlGet = "UPDATE cart SET amount = %s WHERE userid = %s AND productid = %s"
                 if(int(stock[0].get("stock")) >= (int(amount) + int(cart[0].get("amount")))):
-                    sqlGet = "UPDATE cart SET amount = %s WHERE userid = %s AND productid = %s"
                     homeCursor.execute(sqlGet,((int(stockAmount[0].get("amount"))+int(amount)),uid[0].get("id"),pid.get("productid")))
                 else:
+                    homeCursor.execute(sqlGet,(int(stock[0].get("stock")),uid[0].get("id"),pid.get("productid")))
                     pass
                 #result = homeCursor.fetchall()
                 homeConnection.commit()
@@ -97,7 +98,7 @@ def index():
                 sqlGet = "INSERT INTO cart (id, productid, userid, amount) VALUES (1, %s, %s, %s)"
                 homeCursor.execute(sqlGet,(pid.get('productid'),uid[0].get('id'),amount))
             
-            sql = "SELECT model, brand, size, resolution, price, stock FROM tv"
+            sql = "SELECT model, brand, size, resolution, price, stock FROM tv where active = 1"
             homeCursor.execute(sql)
             result = homeCursor.fetchall()
             homeConnection.commit()
@@ -132,4 +133,3 @@ def search():
         return r
         #return render_template("index.html" , form = form,headings= headings, data = result)
     
-
