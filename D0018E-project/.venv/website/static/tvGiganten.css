@@ -66,9 +66,8 @@ nav {
 
 .searchbutton {
 	display: flex;
-	margin-bottom: -3%;
+	margin-top: 10px;
 	justify-content: center;
-	padding-top: 1%;
   }
  
 .checkout{
@@ -196,7 +195,7 @@ tr:nth-child(even) {
 	display: flex;
 	flex-direction: column;
     margin: auto;
-    margin-top: 70px;
+    margin-top: 10px;
 	width: 850px;
 	height: 650px;
     align-items: center;

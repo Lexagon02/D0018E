@@ -127,6 +127,7 @@ def product():
     if request.method == "GET":
         return render_template('product.html',headings=headings,title=title, data=reviewlist, value=login, form=form)
     if request.method == "POST":
+
         if(request.form["product"]=="add"):
             with homeConnection.cursor() as homeCursor:
                     pid = session["serial"]
@@ -158,8 +159,12 @@ def product():
                     model=homeCursor.fetchall()
                     title=model[0].get("brand")
                     title=title+" "+model[0].get("model")
+                    homeCursor.execute(sqlModel,pid)
+                    model=homeCursor.fetchall()
+                    title=model[0].get("brand")
+                    title=title+" "+model[0].get("model")
                     homeConnection.commit()
-                    return render_template('product.html',headings=headings, data=reviewlist, value=login, form=form)
+                    return render_template('product.html',headings=headings, data=reviewlist, value=login, form=form, title=title)
         elif(request.form["product"]=="redirect"):
              with homeConnection:
                 with homeConnection.cursor() as homeCursor:
@@ -183,10 +188,14 @@ def product():
                     model=homeCursor.fetchall()
                     title=model[0].get("brand")
                     title=title+" "+model[0].get("model")
+                    homeCursor.execute(sqlModel,pid)
+                    model=homeCursor.fetchall()
+                    title=model[0].get("brand")
+                    title=title+" "+model[0].get("model")
                     homeConnection.commit()
                     session["serial"] = pid
                     print(session["serial"])
-                    return render_template('product.html',headings=headings,data=reviewlist, value=login, form=form)
+                    return render_template('product.html',headings=headings,data=reviewlist, value=login, form=form,title=title)
         else:
             return render_template("index.html",headings=headings,data=reviewlist, value=login, form=form)
         

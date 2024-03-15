@@ -48,6 +48,7 @@
 		</div>
 		{% if value == 1 %}
 		<div class = "searchbutton">
+			
 			<form method = "POST" action="{{url_for('views.product')}}">
 				<INPUT TYPE="NUMBER" name="NUMBER" MIN="1" MAX="5" STEP="1" VALUE="1" SIZE="1">
 				{{ form.csrf_token }}
@@ -55,18 +56,22 @@
 			 	aria-label="Comment", name = "comment" >
 				<button type="comment"name="product" value="add">Add review</button>	
 			</form>
-				
+			
 		</div>
 		{% endif %}
+		<div class = "searchbutton">
+			<h1>{{ title }}</h1>
+		</div>
+		
 
 
 
-			
+		
 
 		<div class="game-container" id="game-container">
 			<table>
 				<thead>
-
+					
 				</thead>
 				<thead>
 					<tr>
