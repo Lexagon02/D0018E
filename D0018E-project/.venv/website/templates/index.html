@@ -14,7 +14,6 @@
 	
 		
 
-
 		<nav>
 			<div class="logo">
 				<a class ="LOGO" href="/">TvGiganten</a>
@@ -71,23 +70,29 @@
 				</thead>
 				<tbody>
 					{% for row in data %}
-					<form method="post" action="{{ url_for( "views.index" )}}">
-							<td>{{row["brand"]}}</td>
-							<td>
-								<input type="hidden" name="model" value="{{ row["model"] }}">{{row["model"]}}
-							</td>
-							<td>{{row["size"]}}</td>
-							<td>{{row["resolution"]}}</td>
-							<td>{{row["price"]}}</td>
-							<td>{{row["stock"]}}</td>
-							<td>
-								<INPUT TYPE="NUMBER" name="NUMBER" MIN="1" MAX={{row["stock"]}} STEP="1" VALUE="1" SIZE="1">
-								<button type="submit" label ="submit" name ="add" >Add</button>
-								<button type="submit" label ="product" name="product" >Product</button>
-							</td>
-						</tr>
-					</form>
-						{% endfor %}
+					<form method="post"  action="{{ url_for( "views.index" )}}">
+						<td>{{row["brand"]}}</td>
+						<td>
+							<input type="hidden" name="model" value="{{ row["model"] }}">{{row["model"]}}
+						</td>
+						<td>{{row["size"]}}</td>
+						<td>{{row["resolution"]}}</td>
+						<td>{{row["price"]}}</td>
+						<td>{{row["stock"]}}</td>
+						<td>
+							<form method="post"  action="{{ url_for( "views.index" )}}">
+							<INPUT TYPE="NUMBER" name="NUMBER" MIN="1" MAX={{row["stock"]}} STEP="1" VALUE="1" SIZE="1">
+							<button type="submit" label ="submit" name ="add" >Add</button>
+							</form>
+							<form method="post" action="{{ url_for( "views.product" )}}">
+								<input type="hidden" name="model" value="{{ row["model"]}}">
+								<button type="submit" label ="product" name="product" value ="redirect">Product</button>
+							</form>
+						</td>
+					</tr>
+				</form>
+					{% endfor %}
+				</form>
 				</tbody>
 			  </table>
 			  

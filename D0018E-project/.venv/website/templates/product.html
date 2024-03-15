@@ -47,13 +47,12 @@
 			</div>
 		</div>
 		<div class = "searchbutton">
-			
 			<form method = "POST" action="{{url_for('views.product')}}">
 				<INPUT TYPE="NUMBER" name="NUMBER" MIN="1" MAX="5" STEP="1" VALUE="1" SIZE="1">
 				{{ form.csrf_token }}
 			<input type = "comment" placeholder = "Comment"
 			 	aria-label="Comment", name = "comment" >
-				<button type="comment">Add review</button>	
+				<button type="comment"name="product" value="add">Add review</button>	
 			</form>
 				
 		</div>

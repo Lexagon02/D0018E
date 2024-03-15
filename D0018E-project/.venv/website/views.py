@@ -81,7 +81,6 @@ def index():
             stockAmount = homeCursor.fetchall()
 
             if(add is not None):
-                print("addddddd")
                 if(stockAmount != ()):
                     sql = "SELECT amount FROM cart WHERE userid = %s AND productid = %s"
                     sql2 = "Select stock from tv where productid = %s"
@@ -95,7 +94,6 @@ def index():
                     else:
                         homeCursor.execute(sqlGet,(int(stock[0].get("stock")),uid[0].get("id"),pid.get("productid")))
                         pass
-                    #result = homeCursor.fetchall()
                     homeConnection.commit()
                     
                 else:
@@ -108,10 +106,9 @@ def index():
                 result = homeCursor.fetchall()
                 homeConnection.commit()
             elif(product is not None):
-                print(pid)
-                print("producttttttt")
-                return render_template("register.html",data = pid,form=form)
-    return render_template('index.html',headings=headings, data=result, value=login, form=form)
+                return render_template("product.html",data = pid,form=form)
+            else:
+                return render_template('index.html',headings=headings, data=result, value=login, form=form)
 
 
 @views.route('/product', methods=["GET", "POST"])
@@ -124,60 +121,76 @@ def product():
         login=1
     rating = request.form.get("NUMBER")
     comment = request.form.get("comment")
+    serial = request.form.get("model")
+    print(serial)
     if request.method == "GET":
-        with homeConnection:
-            with homeConnection.cursor() as homeCursor:
-                pid=3
-                sqlModel="SELECT model,brand FROM tv WHERE productid=%s"
-                sqlName="SELECT name FROM users WHERE id=%s"
-                sqlrev = "SELECT * FROM reviews WHERE productid = %s"
-                homeCursor.execute(sqlrev,pid)
-                reviews=homeCursor.fetchall()
-                reviewlist=[]
-                for review in reviews:
-                    homeCursor.execute(sqlName,review.get('userid'))
-                    name=homeCursor.fetchall()
-                    name[0].update(review)
-                    reviewlist=reviewlist+name
-                homeCursor.execute(sqlModel,pid)
-                model=homeCursor.fetchall()
-                title=model[0].get("brand")
-                title=title+" "+model[0].get("model")
-                homeConnection.commit()
+       
         return render_template('product.html',headings=headings,title=title, data=reviewlist, value=login, form=form)
     if request.method == "POST":
-        with homeConnection.cursor() as homeCursor:
-                pid=3
-                sqlInsertRev="INSERT INTO reviews (userid,rating,comment,productid) VALUES (%s,%s,%s,%s)"
-                sqlUpdateRev="UPDATE reviews SET rating=%s, comment=%s WHERE userid=%s AND productid=%s"
-                sqlModel="SELECT model,brand FROM tv WHERE productid=%s"
-                sqlName="SELECT name FROM users WHERE id=%s"
-                sqlrev = "SELECT * FROM reviews WHERE productid = %s"
-                sqlGetUID="SELECT id FROM users WHERE mail=%s"
-                homeCursor.execute(sqlGetUID,session["name"])
-                uid=homeCursor.fetchall()
-                uid=uid[0].get("id")
-                homeCursor.execute(sqlrev,pid)
-                reviews=homeCursor.fetchall()
-                reviewlist=[]
-                existing=False
-                for review in reviews:
-                    if(review.get('userid'))==uid:
-                        existing=True
-                    homeCursor.execute(sqlName,review.get('userid'))
-                    name=homeCursor.fetchall()
-                    name[0].update(review)
-                    reviewlist=reviewlist+name
-                if existing==False:
-                    homeCursor.execute(sqlInsertRev,(uid,rating,comment,pid))
-                else:
-                    homeCursor.execute(sqlUpdateRev,(rating,comment,uid,pid))
-                homeCursor.execute(sqlModel,pid)
-                model=homeCursor.fetchall()
-                title=model[0].get("brand")
-                title=title+" "+model[0].get("model")
-                homeConnection.commit()
-        return render_template('product.html',headings=headings,title=title, data=reviewlist, value=login, form=form)
+        if(request.form["product"]=="add"):
+            with homeConnection.cursor() as homeCursor:
+                    pid = session["serial"]
+                    print(pid)
+                    sqlInsertRev="INSERT INTO reviews (userid,rating,comment,productid) VALUES (%s,%s,%s,%s)"
+                    sqlUpdateRev="UPDATE reviews SET rating=%s, comment=%s WHERE userid=%s AND productid=%s"
+                    sqlModel="SELECT model,brand FROM tv WHERE productid=%s"
+                    sqlName="SELECT name FROM users WHERE id=%s"
+                    sqlrev = "SELECT * FROM reviews WHERE productid = %s"
+                    sqlGetUID="SELECT id FROM users WHERE mail=%s"
+                    homeCursor.execute(sqlGetUID,session["name"])
+                    uid=homeCursor.fetchall()
+                    uid=uid[0].get("id")
+                    homeCursor.execute(sqlrev,pid)
+                    reviews=homeCursor.fetchall()
+                    reviewlist=[]
+                    existing=False
+                    for review in reviews:
+                        if(review.get('userid'))==uid:
+                            existing=True
+                        homeCursor.execute(sqlName,review.get('userid'))
+                        name=homeCursor.fetchall()
+                        name[0].update(review)
+                        reviewlist=reviewlist+name
+                    if existing==False:
+                        homeCursor.execute(sqlInsertRev,(uid,rating,comment,pid))
+                    else:
+                        homeCursor.execute(sqlUpdateRev,(rating,comment,uid,pid))
+                    homeCursor.execute(sqlModel,pid)
+                    model=homeCursor.fetchall()
+                    title=model[0].get("brand")
+                    title=title+" "+model[0].get("model")
+                    homeConnection.commit()
+                    return render_template('product.html',headings=headings, data=reviewlist, value=login, form=form)
+        elif(request.form["product"]=="redirect"):
+             with homeConnection:
+                with homeConnection.cursor() as homeCursor:
+                    sql = "SELECT productid FROM tv WHERE model = %s"
+                    homeCursor.execute(sql,serial)
+                    productid = homeCursor.fetchone()
+                    pid = productid.get("productid")
+                    sqlModel="SELECT model,brand FROM tv WHERE productid=%s"
+                    sqlName="SELECT name FROM users WHERE id=%s"
+                    sqlrev = "SELECT * FROM reviews WHERE productid = %s"
+                    print(pid)
+                    homeCursor.execute(sqlrev,pid)
+                    reviews=homeCursor.fetchall()
+                    reviewlist=[]
+                    for review in reviews:
+                        homeCursor.execute(sqlName,review.get('userid'))
+                        name=homeCursor.fetchall()
+                        name[0].update(review)
+                        reviewlist=reviewlist+name
+                    homeCursor.execute(sqlModel,pid)
+                    model=homeCursor.fetchall()
+                    title=model[0].get("brand")
+                    title=title+" "+model[0].get("model")
+                    homeConnection.commit()
+                    session["serial"] = pid
+                    print(session["serial"])
+                    return render_template('product.html',headings=headings,data=reviewlist, value=login, form=form)
+        else:
+            return render_template("index.html",headings=headings,data=reviewlist, value=login, form=form)
+        
 @views.route("/search", methods = ["POST"])
 def search():
     form = searchForm()
@@ -207,16 +220,5 @@ def search():
         return r
         #return render_template("index.html" , form = form,headings= headings, data = result)
     
-@views.route("/products", methods = ["POST"])
-def products():
-    print("-------------------")
-    form = searchForm()
-    homeConnection = connection()
-    if request.method=="POST":
-        print("-------------------")
-    with homeConnection:
-        with homeConnection.cursor() as productCursor:
-            serial = request.form.get("model",1)
-    return render_template('index.html', form=form)
 
 
