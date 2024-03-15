@@ -116,21 +116,20 @@ def product():
     form = addForm()
     homeConnection = connection()
     headings = ['Name', 'Rating', 'Comment']
-    login=0
-    if not session.get("name"):
-        login=1
+    login=1
+    if(session["name"] == None):
+        login=0
+    print(login)
     rating = request.form.get("NUMBER")
     comment = request.form.get("comment")
     serial = request.form.get("model")
-    print(serial)
+    sqlrev = "SELECT * FROM reviews WHERE productid = %s"
     if request.method == "GET":
-       
         return render_template('product.html',headings=headings,title=title, data=reviewlist, value=login, form=form)
     if request.method == "POST":
         if(request.form["product"]=="add"):
             with homeConnection.cursor() as homeCursor:
                     pid = session["serial"]
-                    print(pid)
                     sqlInsertRev="INSERT INTO reviews (userid,rating,comment,productid) VALUES (%s,%s,%s,%s)"
                     sqlUpdateRev="UPDATE reviews SET rating=%s, comment=%s WHERE userid=%s AND productid=%s"
                     sqlModel="SELECT model,brand FROM tv WHERE productid=%s"
