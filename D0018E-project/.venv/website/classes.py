@@ -7,4 +7,5 @@ class searchForm(FlaskForm):
     submit = SubmitField("Submit")
 
 class addForm(FlaskForm):
-    submit = SubmitField("Submit") 
+    submit = SubmitField("Submit")
+    submit2 = SubmitField("product") 

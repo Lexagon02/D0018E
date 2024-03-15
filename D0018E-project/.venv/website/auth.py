@@ -320,6 +320,7 @@ def cart():
                 cursorCart.execute(sql,uid)
                 input = cursorCart.fetchall()
                 if request.method == "POST":
+                    print("------------")
                     sqlStock="SELECT stock,active FROM tv WHERE productid =%s"
                     sql = "INSERT INTO orders (orderid,userid,date,productid,amount) VALUES(%s,%s,%s,%s,%s)"
                     sqlrem="DELETE FROM cart WHERE userid=%s"
@@ -335,13 +336,17 @@ def cart():
                     return render_template("cart.html", headings=heading,data=result)
 
                 else:
+                    #OM DU HAR INACTIVE TV SOM SISTA ORDER, ALLTSÅ DEN MED HÖGST PRODUCTid ÄR INAKTIV KOMMER HELA CARTEN GÅ SÖNDER
                     for i in range(len(input)):
                         sql= "SELECT brand,model,price FROM tv WHERE productid = %s AND active=1"
-                        cursorCart.execute(sql,input[i].get('productid'))
+                        cursorCart.execute(sql,(input[i].get('productid')))
+            
                         temp=cursorCart.fetchall()
+                        
                         if temp == ():
                             return render_template("cart.html")
                         temp[0].update(input[i].items())
                         result=result+temp
                         cartCon.commit()
                     return render_template("cart.html", headings=heading,data=result)
+                
