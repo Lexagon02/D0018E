@@ -147,13 +147,22 @@ def adminStuff():
             with adminCon:
                 with adminCon.cursor() as cursoraddTV:
                     # Read a single record
-                    sqlEdit="UPDATE tv SET model=%s,brand=%s,size=%s,resolution=%s,price=%s,stock=%s WHERE productid=%s"
                     sql1 = "INSERT INTO tv (model,brand,size,resolution,price,stock) VALUES (%s,%s,%s,%s,%s,%s);"
-                    print(pid)
                     if not pid:
                         cursoraddTV.execute(sql1,(model,brand,size,res,price,stock))
+
                     else:
-                        cursoraddTV.execute(sqlEdit,(model,brand,size,res,price,stock,pid))
+                        sql = "UPDATE tv SET {} = %s WHERE productid = %s"
+                        header=["brand","model","size","resolution","price","stock"]
+                        data=[brand,model,size,res,price,stock]
+                        for i in range(6):
+                            if not data[i] :
+                                continue
+                            set_clause = header[i]
+                            print(set_clause)
+                            print(data[i])
+                            # Using placeholders for column names without single quotes
+                            cursoraddTV.execute(sql.format(set_clause), (data[i], pid))
                     cursoraddTV.execute(sqlTV)
                     result = cursoraddTV.fetchall()
                     cursoraddTV.execute(sqlUser)
