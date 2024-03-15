@@ -30,6 +30,10 @@
 <form action="{{ url_for("auth.adminStuff")}}" method="post">
     <div class = "registerform">
         <h1>Update or Add TV</h1>
+        
+        <label for="pid">(If editing TV, choose PID. If adding TV, PID leave blank):</label>
+        <label for="pid">Product ID:</label>
+        <input type="number" min="0" id="pid" name="pid">
         <label for="model">Model:</label>
         <input type="text" id="model" name="model">
         <label for="brand">Brand:</label>
@@ -42,8 +46,7 @@
         <input type="number" min="0" id="price" name="price">
         <label for="stock">Stock:</label>
         <input type="number" min="0" id="stock" name="stock">
-        <label for="pid">Product ID (Leave blank if adding new TV):</label>
-        <input type="number" min="0" id="pid" name="pid">
+
 
         <button class="nav-button" type="submit" name="action" value="AddTV">Add</button>
     </div>
@@ -72,7 +75,9 @@
                         <td>{{row["size"]}}</td>
                         <td>{{row["resolution"]}}</td>
                         <td>{{row["price"]}}</td>
+                        <td>{{row["stock"]}}</td>
                         <td>{{row["productid"]}}</td>
+
                     </tr>
                     {% endfor %}
             </tbody>

@@ -127,9 +127,9 @@ def profile():
 @auth.route("/adminStuff", methods = ["GET", "POST"])
 def adminStuff():
     adminCon=connection()
-    heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price', 'ProductID']
+    heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price', "Stock",'ProductID']
 
-    sqlTV =  "SELECT model, brand, size, resolution, price, productid FROM `tv` WHERE active = 1"
+    sqlTV =  "SELECT model, brand, size, resolution, price, productid,stock FROM `tv` WHERE active = 1"
     sqlUser =  "SELECT name, surname, mail, password, address, isAdmin FROM `users`"
     sqlOrder =  "SELECT userid,orderid,date FROM `orders` GROUP BY orderid ORDER BY orderid"
     sqlGetModel="SELECT model,brand FROM tv WHERE productid=%s"
