@@ -27,155 +27,212 @@
 </nav>
 
 
-<form action="{{ url_for("auth.adminStuff")}}" method="post">
-    <div class = "registerform">
-        <h1>Add TV</h1>
-        <label for="model">Model:</label>
-        <input type="text" id="model" name="model">
-        <label for="brand">Brand:</label>
-        <input type="text" id="brand" name="brand">
-        <label for="size">Size:</label>
-        <input type="number" min="0" id="size" name="size">
-        <label for="mail">Resolution:</label>
-        <input type="number" min="0" id="res" name="res">
-        <label for="price">Price:</label>
-        <input type="number" min="0" id="price" name="price">
-        <label for="stock">Stock:</label>
-        <input type="number" min="0" id="stock" name="stock">
+<form action="{{ url_for("auth.adminStuff")}}" method="post" onkeydown="if(event.keyCode === 13) { 
+            alert('You have pressed Enter key, use submit button instead');  
+            return false; 
+            }"> 
+        <div class = "registerform">
+            <br>
+            <h1>Add TV</h1>
+            <label for="model">Model:</label>
+            <input type="text" id="model" name="model">
+            <label for="brand">Brand:</label>
+            <input type="text" id="brand" name="brand">
+            <label for="size">Size:</label>
+            <input type="number" min="0" id="size" name="size">
+            <label for="mail">Resolution:</label>
+            <input type="number" min="0" id="res" name="res">
+            <label for="price">Price:</label>
+            <input type="number" min="0" id="price" name="price">
+            <label for="stock">Stock:</label>
+            <input type="number" min="0" id="stock" name="stock">
 
-        <button class="nav-button" type="submit" name="action" value="AddTV">Add</button>
-    </div>
-    <div class = "registerform">
-            <h1>Remove TV</h1>
-            <label for="modelRem">Model:</label>
-            <input type="text" id="modelRem" name="modelRem">
-            <button class="nav-button" type="submit" name="action" value="DeleteTV">Remove</button>
+            <button class="nav-button" type="submit" name="action" value="AddTV">Add</button>
+        </div>
+        <div class = "registerform">
+            <br>
+                <h1>Remove TV</h1>
+                <label for="modelRem">Model:</label>
+                <input type="text" id="modelRem" name="modelRem">
+                <button class="nav-button" type="submit" name="action" value="DeleteTV">Remove</button>
 
-    </div>
-    
-    <div class="game-container" id="game-container">
-        <table>
-            <thead>
-                <tr>
-                {% for header in headings %}
-                    <th>{{ header }}</th>
-                {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                    {% for row in data %}
+        </div>
+
+        <head>
+            <style type="text/css">
+                input {
+                margin: 2px;
+            }
+            </style>
+        </head>
+        <div class="game-container" id="game-container">
+            <table>
+                <thead>
                     <tr>
-                        <td>{{row["brand"]}}</td>
-                        <td>{{row["model"]}}</td>
-                        <td>{{row["size"]}}</td>
-                        <td>{{row["resolution"]}}</td>
-                        <td>{{row["price"]}}</td>
-                    </tr>
+                    {% for header in headings %}
+                        <th>{{ header }}</th>
                     {% endfor %}
-            </tbody>
-          </table>
-          
-    </div>
-    <div class = "registerform">
-        <h1>Remove User</h1>
-        <label for="mailRem">Email:</label>
-        <input type="text" id="mailRem" name="mailRem">
-        <button class="nav-button" type="submit" name="action" value="DeleteUser">Remove</button>
-    </div>
-    <div class="game-container" id="game-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Email</th>
-                    <th>Password</th>
-                    <th>Addres</th>
-                    <th>Admin</th>
-                </tr>
-            </thead>
-            <tbody>
-                    {% for row in userdata %}
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for row in data %}
+                        <tr>
+                            <td><label for="brand">{{row["brand"]}}</label></td>
+                            <td><label for="brand">{{row["model"]}}</label></td>
+                            <td><label for="brand">{{row["size"]}}</label></td>
+                            <td><label for="brand">{{row["resolution"]}}</label></td>
+                            <td><label for="brand">{{row["price"]}}</label></td>
+                            <td><label for="brand">{{row["stock"]}}</label></td>
+                        </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+            
+            </div>
+        
+        <div class = "registerform">
+            <br>
+            <h1>Remove User</h1>
+            <label for="mailRem">Email:</label>
+            <input type="text" id="mailRem" name="mailRem">
+            <button class="nav-button" type="submit" name="action" value="DeleteUser">Remove</button>
+        </div>
+        <div class="game-container" id="game-container">
+            <table>
+                <thead>
                     <tr>
-                        <td>{{row["name"]}}</td>
-                        <td>{{row["surname"]}}</td>
-                        <td>{{row["mail"]}}</td>
-                        <td>{{row["password"]}}</td>
-                        <td>{{row["address"]}}</td>
-                        <td>{{row["isAdmin"]}}</td>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Addres</th>
+                        <th>Admin</th>
                     </tr>
-                    {% endfor %}
-            </tbody>
-          </table>
-          
-    </div>
-    <div class = "registerform">
-        <h1>Orders</h1>
-        <label for="orderRem">OrderID:</label>
-        <input type="text" id="orderRem" name="orderRem">
-        <button class="nav-button" type="submit" name="action" value="DeleteOrder">Remove</button>
-    </div>
-    <div class="game-container" id="game-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Email</th>
-                    <th>Addres</th>
-                    <th>OrderID</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                    {% for row in orderdata %}
+                </thead>
+                <tbody>
+                        {% for row in userdata %}
+                        <tr>
+                            <td>{{row["name"]}}</td>
+                            <td>{{row["surname"]}}</td>
+                            <td>{{row["mail"]}}</td>
+                            <td>{{row["password"]}}</td>
+                            <td>{{row["address"]}}</td>
+                            <td>{{row["isAdmin"]}}</td>
+                        </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+            
+        </div>
+        <div class = "registerform">
+            <br>
+            <h1>Orders</h1>
+            <label for="orderRem">OrderID:</label>
+            <input type="text" id="orderRem" name="orderRem">
+            <button class="nav-button" type="submit" name="action" value="DeleteOrder">Remove</button>
+        </div>
+        <div class="game-container" id="game-container">
+            <table>
+                <thead>
                     <tr>
-                        <td>{{row["name"]}}</td>
-                        <td>{{row["surname"]}}</td>
-                        <td>{{row["mail"]}}</td>
-                        <td>{{row["address"]}}</td>
-                        <td>{{row["orderid"]}}</td>
-                        <td>{{row["date"]}}</td>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Email</th>
+                        <th>Addres</th>
+                        <th>OrderID</th>
+                        <th>Date</th>
                     </tr>
-                    {% endfor %}
-            </tbody>
-          </table>
-          
-    </div>
-    <div class = "registerform">
-        <h1>Check order</h1>
-        <label for="orderCheck">OrderID:</label>
-        <input type="text" id="orderCheck" name="orderCheck">
-        <button class="nav-button" type="submit" name="action" value="CheckOrder">Check</button>
-    </div>
-    <div class="game-container" id="game-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Email</th>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>ProductID</th>
-                    <th>Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                    {% for row in checkorderdata %}
+                </thead>
+                <tbody>
+                        {% for row in orderdata %}
+                        <tr>
+                            <td>{{row["name"]}}</td>
+                            <td>{{row["surname"]}}</td>
+                            <td>{{row["mail"]}}</td>
+                            <td>{{row["address"]}}</td>
+                            <td>{{row["orderid"]}}</td>
+                            <td>{{row["date"]}}</td>
+                        </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+            
+        </div>
+        <div class = "registerform">
+            <br>
+            <h1>Check order</h1>
+            <label for="orderCheck">OrderID:</label>
+            <input type="text" id="orderCheck" name="orderCheck">
+            <button class="nav-button" type="submit" name="action" value="CheckOrder">Check</button>
+        </div>
+        <div class="game-container" id="game-container">
+            <table>
+                <thead>
                     <tr>
-                        <td>{{row["name"]}}</td>
-                        <td>{{row["surname"]}}</td>
-                        <td>{{row["mail"]}}</td>
-                        <td>{{row["brand"]}}</td>
-                        <td>{{row["model"]}}</td>
-                        <td>{{row["productid"]}}</td>
-                        <td>{{row["amount"]}}</td>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Email</th>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>ProductID</th>
+                        <th>Amount</th>
                     </tr>
-                    {% endfor %}
-            </tbody>
-          </table>
-          
-    </div>
-    </form>
+                </thead>
+                <tbody>
+                        {% for row in checkorderdata %}
+                        <tr>
+                            <td>{{row["name"]}}</td>
+                            <td>{{row["surname"]}}</td>
+                            <td>{{row["mail"]}}</td>
+                            <td>{{row["brand"]}}</td>
+                            <td>{{row["model"]}}</td>
+                            <td>{{row["productid"]}}</td>
+                            <td>{{row["amount"]}}</td>
+                        </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+            
+        </div>
+        <div class = "registerform">
+            <br>
+            <h1>Update TVs</h1>
+            <label for="updateTV">TV Model</label>
+            <input type="text" id="updateTV" name="updateTV">
+            <button class="nav-button" type="submit" name="action" value="updateTV">Search TV</button>
+        </div>
+        <div class="game-container" id="game-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Size</th>
+                        <th>Resolution</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <form id="subbmitUpdateTV" name="action" action="subbmitUpdateTV">
+                        {% for row in TVdata %}
+                        <tr>
+                            <td><input type="text" id="brand" name="brand" width="7" placeholder={{row["brand"]}}> <br> </td>
+                            <td><input type="text" id="model" name="model" width="7" placeholder={{row["model"]}}><br></td>
+                            <td><input type="number" id="size" name="size" max="99999" SIZE="1" min="0" placeholder={{row["size"]}}><br></td>
+                            <td><input type="number" id="resolution" name="resolution" max="99999" SIZE="1" min="0" placeholder={{row["resolution"]}}><br></td>
+                            <td><input type="number" id="price" name="price" max="999999" SIZE="1" min="0" placeholder={{row["price"]}}><br></td>
+                            <td><input type="number" id="stock" name="stock" max="99999" min="0" SIZE="1" placeholder={{row["stock"]}}><br></td>
+                            <button class="nav-button" name="action" value="subbmitUpdateTV" type="submit">Submit change</button>
+                        </tr>
+                           <!-- <input type="submit" name="action" action="subbmitUpdateTV" id="submitUpdateTV" value="Subbmit"> -->
+                        
+                        {% endfor %}
+                    </form>
+                </tbody>
+            </table>
+            
+            
+        </div>
+</form>
 </html>

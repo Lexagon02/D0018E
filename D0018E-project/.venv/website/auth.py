@@ -127,9 +127,9 @@ def profile():
 @auth.route("/adminStuff", methods = ["GET", "POST"])
 def adminStuff():
     adminCon=connection()
-    heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price']
+    heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price', 'Stock']
 
-    sqlTV =  "SELECT model, brand, size, resolution, price FROM `tv` WHERE active = 1"
+    sqlTV =  "SELECT model, brand, size, resolution, price, stock FROM `tv` WHERE active = 1"
     sqlUser =  "SELECT name, surname, mail, password, address, isAdmin FROM `users`"
     sqlOrder =  "SELECT userid,orderid,date FROM `orders` GROUP BY orderid ORDER BY orderid"
     sqlGetModel="SELECT model,brand FROM tv WHERE productid=%s"
@@ -273,8 +273,72 @@ def adminStuff():
                         temp=cursorRemUser.fetchall()
                         temp[0].update(order)
                         orderresult=orderresult+temp
-                    adminRemUser.commit()        
-            return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata,orderdata=orderresult,checkorderdata=checkorderresult) 
+                    adminRemUser.commit()
+            return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata,orderdata=orderresult,checkorderdata=checkorderresult,TVdata=TVdata)            
+        
+        if request.form["action"]=="subbmitUpdateTV":
+            brand = request.form.get("brand")
+            model = request.form.get("model")
+            size = request.form.get("size")
+            resolution = request.form.get("resolution")
+            price = request.form.get("price")
+            stock = request.form.get("stock")
+
+            print(brand)
+            print(model)
+            print(str(size))
+            print("1")
+            print(resolution)
+            print(price)
+            print(stock)
+                  
+            print("updateTV")
+            adminSubbmitUppdateTV=connection()
+            order = request.form.get("updateTV")
+            with adminSubbmitUppdateTV:
+                with adminSubbmitUppdateTV.cursor() as cursorSubbmitUppdateTV:
+                    sql3 = "SELECT * FROM tv WHERE model=%s;"
+                    print(order)
+                    cursorSubbmitUppdateTV.execute(sql3,(order))
+                    TVdata=cursorSubbmitUppdateTV.fetchall()
+                    print(TVdata)
+                    cursorSubbmitUppdateTV.execute(sqlTV)
+                    result = cursorSubbmitUppdateTV.fetchall()
+                    cursorSubbmitUppdateTV.execute(sqlUser)
+                    userdata = cursorSubbmitUppdateTV.fetchall()
+                    cursorSubbmitUppdateTV.execute(sqlOrder)
+                    orderdata = cursorSubbmitUppdateTV.fetchall()
+                    orderresult=[]
+                    for order in orderdata:
+                        cursorSubbmitUppdateTV.execute(sqlOrderUser,order.get('userid'))
+                        temp=cursorSubbmitUppdateTV.fetchall()
+                        temp[0].update(order)
+                        orderresult=orderresult+temp
+                    adminSubbmitUppdateTV.commit()
+        
+        if request.form["action"]=="updateTV":
+            adminUppdateTV=connection()
+            order = request.form.get("updateTV")
+            with adminUppdateTV:
+                with adminUppdateTV.cursor() as cursorUppdateTV:
+                    sql3 = "SELECT * FROM tv WHERE model=%s;"
+                    cursorUppdateTV.execute(sql3,(order))
+                    TVdata=cursorUppdateTV.fetchall()
+                    cursorUppdateTV.execute(sqlTV)
+                    result = cursorUppdateTV.fetchall()
+                    cursorUppdateTV.execute(sqlUser)
+                    userdata = cursorUppdateTV.fetchall()
+                    cursorUppdateTV.execute(sqlOrder)
+                    orderdata = cursorUppdateTV.fetchall()
+                    orderresult=[]
+                    for order in orderdata:
+                        cursorUppdateTV.execute(sqlOrderUser,order.get('userid'))
+                        temp=cursorUppdateTV.fetchall()
+                        temp[0].update(order)
+                        orderresult=orderresult+temp
+                    adminUppdateTV.commit()                     
+            return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata,orderdata=orderresult,TVdata=TVdata) 
+        
     else:
         with adminCon:
             with adminCon.cursor() as cursorShowTV:
