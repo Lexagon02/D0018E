@@ -55,6 +55,8 @@ def index():
     if request.method == "POST":
         serial = request.form.get("model",1)
         amount = request.form.get("NUMBER")
+        add = request.form.get("add")
+        product = request.form.get("product")
     amount = request.form.get("NUMBER")
 
     if not session.get("name"):
@@ -77,30 +79,38 @@ def index():
             sql = "SELECT amount FROM cart WHERE userid = %s AND productid = %s"
             homeCursor.execute(sql,(uid[0].get("id"),pid.get("productid")))
             stockAmount = homeCursor.fetchall()
-            
-            if(stockAmount != ()):
-                sql = "SELECT amount FROM cart WHERE userid = %s AND productid = %s"
-                sql2 = "Select stock from tv where productid = %s"
-                homeCursor.execute(sql,(uid[0].get("id"),pid.get("productid")))
-                cart = homeCursor.fetchall()
-                homeCursor.execute(sql2,pid.get("productid"))
-                stock = homeCursor.fetchall()
-                sqlGet = "UPDATE cart SET amount = %s WHERE userid = %s AND productid = %s"
-                if(int(stock[0].get("stock")) >= (int(amount) + int(cart[0].get("amount")))):
-                    homeCursor.execute(sqlGet,((int(stockAmount[0].get("amount"))+int(amount)),uid[0].get("id"),pid.get("productid")))
+
+            if(add is not None):
+                print("addddddd")
+                if(stockAmount != ()):
+                    sql = "SELECT amount FROM cart WHERE userid = %s AND productid = %s"
+                    sql2 = "Select stock from tv where productid = %s"
+                    homeCursor.execute(sql,(uid[0].get("id"),pid.get("productid")))
+                    cart = homeCursor.fetchall()
+                    homeCursor.execute(sql2,pid.get("productid"))
+                    stock = homeCursor.fetchall()
+                    sqlGet = "UPDATE cart SET amount = %s WHERE userid = %s AND productid = %s"
+                    if(int(stock[0].get("stock")) >= (int(amount) + int(cart[0].get("amount")))):
+                        homeCursor.execute(sqlGet,((int(stockAmount[0].get("amount"))+int(amount)),uid[0].get("id"),pid.get("productid")))
+                    else:
+                        homeCursor.execute(sqlGet,(int(stock[0].get("stock")),uid[0].get("id"),pid.get("productid")))
+                        pass
+                    #result = homeCursor.fetchall()
+                    homeConnection.commit()
+                    
                 else:
-                    homeCursor.execute(sqlGet,(int(stock[0].get("stock")),uid[0].get("id"),pid.get("productid")))
-                    pass
-                homeConnection.commit()
+                    sqlGet = "INSERT INTO cart (id, productid, userid, amount) VALUES (1, %s, %s, %s)"
+                    homeCursor.execute(sqlGet,(pid.get('productid'),uid[0].get('id'),amount))
+
                 
-            else:
-                sqlGet = "INSERT INTO cart (id, productid, userid, amount) VALUES (1, %s, %s, %s)"
-                homeCursor.execute(sqlGet,(pid.get('productid'),uid[0].get('id'),amount))
-            
-            sql = "SELECT model, brand, size, resolution, price, stock FROM tv"
-            homeCursor.execute(sql)
-            result = homeCursor.fetchall()
-            homeConnection.commit()
+                sql = "SELECT model, brand, size, resolution, price, stock FROM tv where active = 1"
+                homeCursor.execute(sql)
+                result = homeCursor.fetchall()
+                homeConnection.commit()
+            elif(product is not None):
+                print(pid)
+                print("producttttttt")
+                return render_template("register.html",data = pid,form=form)
     return render_template('index.html',headings=headings, data=result, value=login, form=form)
 
 
@@ -175,8 +185,8 @@ def search():
     headings = ['Brand', 'Model', 'Size', 'Resolution', 'Price','Stock']
     if not session.get("name"):
         login=0
-        return render_template("login.html")
-    login=1
+    else:
+        login=1
     mail=session.get("name")
     if form.validate_on_submit():
         searches = form.searched.data
@@ -197,4 +207,16 @@ def search():
         return r
         #return render_template("index.html" , form = form,headings= headings, data = result)
     
+@views.route("/products", methods = ["POST"])
+def products():
+    print("-------------------")
+    form = searchForm()
+    homeConnection = connection()
+    if request.method=="POST":
+        print("-------------------")
+    with homeConnection:
+        with homeConnection.cursor() as productCursor:
+            serial = request.form.get("model",1)
+    return render_template('index.html', form=form)
+
 
