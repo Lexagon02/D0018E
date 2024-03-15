@@ -79,6 +79,7 @@ def index():
             sql = "SELECT amount FROM cart WHERE userid = %s AND productid = %s"
             homeCursor.execute(sql,(uid[0].get("id"),pid.get("productid")))
             stockAmount = homeCursor.fetchall()
+
             if(add is not None):
                 print("addddddd")
                 if(stockAmount != ()):
@@ -100,6 +101,7 @@ def index():
                 else:
                     sqlGet = "INSERT INTO cart (id, productid, userid, amount) VALUES (1, %s, %s, %s)"
                     homeCursor.execute(sqlGet,(pid.get('productid'),uid[0].get('id'),amount))
+
                 
                 sql = "SELECT model, brand, size, resolution, price, stock FROM tv where active = 1"
                 homeCursor.execute(sql)
@@ -111,6 +113,71 @@ def index():
                 return render_template("register.html",data = pid,form=form)
     return render_template('index.html',headings=headings, data=result, value=login, form=form)
 
+
+@views.route('/product', methods=["GET", "POST"])
+def product():
+    form = addForm()
+    homeConnection = connection()
+    headings = ['Name', 'Rating', 'Comment']
+    login=0
+    if not session.get("name"):
+        login=1
+    rating = request.form.get("NUMBER")
+    comment = request.form.get("comment")
+    if request.method == "GET":
+        with homeConnection:
+            with homeConnection.cursor() as homeCursor:
+                pid=3
+                sqlModel="SELECT model,brand FROM tv WHERE productid=%s"
+                sqlName="SELECT name FROM users WHERE id=%s"
+                sqlrev = "SELECT * FROM reviews WHERE productid = %s"
+                homeCursor.execute(sqlrev,pid)
+                reviews=homeCursor.fetchall()
+                reviewlist=[]
+                for review in reviews:
+                    homeCursor.execute(sqlName,review.get('userid'))
+                    name=homeCursor.fetchall()
+                    name[0].update(review)
+                    reviewlist=reviewlist+name
+                homeCursor.execute(sqlModel,pid)
+                model=homeCursor.fetchall()
+                title=model[0].get("brand")
+                title=title+" "+model[0].get("model")
+                homeConnection.commit()
+        return render_template('product.html',headings=headings,title=title, data=reviewlist, value=login, form=form)
+    if request.method == "POST":
+        with homeConnection.cursor() as homeCursor:
+                pid=3
+                sqlInsertRev="INSERT INTO reviews (userid,rating,comment,productid) VALUES (%s,%s,%s,%s)"
+                sqlUpdateRev="UPDATE reviews SET rating=%s, comment=%s WHERE userid=%s AND productid=%s"
+                sqlModel="SELECT model,brand FROM tv WHERE productid=%s"
+                sqlName="SELECT name FROM users WHERE id=%s"
+                sqlrev = "SELECT * FROM reviews WHERE productid = %s"
+                sqlGetUID="SELECT id FROM users WHERE mail=%s"
+                homeCursor.execute(sqlGetUID,session["name"])
+                uid=homeCursor.fetchall()
+                uid=uid[0].get("id")
+                homeCursor.execute(sqlrev,pid)
+                reviews=homeCursor.fetchall()
+                reviewlist=[]
+                existing=False
+                for review in reviews:
+                    if(review.get('userid'))==uid:
+                        existing=True
+                    homeCursor.execute(sqlName,review.get('userid'))
+                    name=homeCursor.fetchall()
+                    name[0].update(review)
+                    reviewlist=reviewlist+name
+                if existing==False:
+                    homeCursor.execute(sqlInsertRev,(uid,rating,comment,pid))
+                else:
+                    homeCursor.execute(sqlUpdateRev,(rating,comment,uid,pid))
+                homeCursor.execute(sqlModel,pid)
+                model=homeCursor.fetchall()
+                title=model[0].get("brand")
+                title=title+" "+model[0].get("model")
+                homeConnection.commit()
+        return render_template('product.html',headings=headings,title=title, data=reviewlist, value=login, form=form)
 @views.route("/search", methods = ["POST"])
 def search():
     form = searchForm()

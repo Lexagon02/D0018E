@@ -1,0 +1,111 @@
+<!-- Leo Rydeker Bergström || 20020306-2252 --> 
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>tvGiganten</title>
+		<link rel="stylesheet" type="text/css" href="static/tvGiganten.css">
+		<script type="text/javascript" src="static/tvGiganten.js"></script>
+	</head>
+
+
+
+		<nav>
+			<div class="logo">
+				<a class ="LOGO" href="/">TvGiganten</a>
+			</div>
+			
+			<ul class="nav-links">
+				<a class="nav-button"  href = {{url_for('auth.cart')}}>Cart</a>
+				
+				{% if value == 1 %}
+				<a class="nav-button"  href = {{url_for('auth.profile')}}>Profile</a>
+				<a class="nav-button"  href = {{url_for('auth.logout')}}>Logout</a>
+				{% else %}
+				<a class="nav-button"  href = {{url_for('auth.register')}}>Register</a>
+				<a class="nav-button"  href = {{url_for('auth.login')}}>Login</a>
+				{% endif %}
+			</ul>
+			
+			<div class="burger">
+				<div class="line1"></div>
+				<div class="line2"></div>
+				<div class="line3"></div>
+			</div>
+		</nav>
+		
+		<div class="popup" id="popup-1">
+			<div class="overlay"></div>
+			<div class="content">
+
+				<ol class="rules">
+
+				</ol>
+
+			</div>
+		</div>
+		<div class = "searchbutton">
+			
+			<form method = "POST" action="{{url_for('views.product')}}">
+				<INPUT TYPE="NUMBER" name="NUMBER" MIN="1" MAX="5" STEP="1" VALUE="1" SIZE="1">
+				{{ form.csrf_token }}
+			<input type = "comment" placeholder = "Comment"
+			 	aria-label="Comment", name = "comment" >
+				<button type="comment">Add review</button>	
+			</form>
+				
+		</div>
+			
+
+
+
+			
+
+		<div class="game-container" id="game-container">
+			<table>
+				<thead>
+
+				</thead>
+				<thead>
+					<tr>
+					{% for header in headings %}
+						<th>{{ header }}</th>
+					{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for row in data %}
+					<form method="post" action="{{ url_for( "views.product" )}}">
+							<td>{{row["name"]}}</td>
+							<td>{{row["rating"]}}</td>
+							<td>{{row["comment"]}}</td>
+						</tr>
+					</form>
+						{% endfor %}
+				</tbody>
+			  </table>
+			  
+		</div>
+
+		<div class="info-box">
+			<div class="origin">
+				<h1>About us</h1>
+				<p>
+					We are experts on electronics and will make sure we find a Tv suitable for you.
+				</p>
+			</div>
+			<div class="about">
+				<h1>Contact us</h1>
+				<p>
+					You can contact our customer support by phone: 123-456-789 or by sending an email to tvgiganten@gmail.com.
+				</p>
+			</div>
+		</div>
+
+		<script src="static/navScript.js"></script>
+		<script src="static/navButtons.js"></script>
+
+	</body>
+</html>
