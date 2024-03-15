@@ -117,7 +117,7 @@ def product():
     homeConnection = connection()
     headings = ['Name', 'Rating', 'Comment']
     login=1
-    if(session["name"] == None):
+    if not session.get("name"):
         login=0
     print(login)
     rating = request.form.get("NUMBER")
