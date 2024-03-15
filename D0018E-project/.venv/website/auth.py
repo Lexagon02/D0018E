@@ -127,9 +127,9 @@ def profile():
 @auth.route("/adminStuff", methods = ["GET", "POST"])
 def adminStuff():
     adminCon=connection()
-    heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price']
+    heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price', 'ProductID']
 
-    sqlTV =  "SELECT model, brand, size, resolution, price FROM `tv` WHERE active = 1"
+    sqlTV =  "SELECT model, brand, size, resolution, price, productid FROM `tv` WHERE active = 1"
     sqlUser =  "SELECT name, surname, mail, password, address, isAdmin FROM `users`"
     sqlOrder =  "SELECT userid,orderid,date FROM `orders` GROUP BY orderid ORDER BY orderid"
     sqlGetModel="SELECT model,brand FROM tv WHERE productid=%s"
@@ -142,12 +142,18 @@ def adminStuff():
             res = request.form.get("res")
             price = request.form.get("price")
             stock = request.form.get("stock") 
+            pid = request.form.get("pid") 
     
             with adminCon:
                 with adminCon.cursor() as cursoraddTV:
                     # Read a single record
+                    sqlEdit="UPDATE tv SET model=%s,brand=%s,size=%s,resolution=%s,price=%s,stock=%s WHERE productid=%s"
                     sql1 = "INSERT INTO tv (model,brand,size,resolution,price,stock) VALUES (%s,%s,%s,%s,%s,%s);"
-                    cursoraddTV.execute(sql1,(model,brand,size,res,price,stock))
+                    print(pid)
+                    if not pid:
+                        cursoraddTV.execute(sql1,(model,brand,size,res,price,stock))
+                    else:
+                        cursoraddTV.execute(sqlEdit,(model,brand,size,res,price,stock,pid))
                     cursoraddTV.execute(sqlTV)
                     result = cursoraddTV.fetchall()
                     cursoraddTV.execute(sqlUser)

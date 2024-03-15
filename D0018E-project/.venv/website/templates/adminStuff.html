@@ -42,6 +42,8 @@
         <input type="number" min="0" id="price" name="price">
         <label for="stock">Stock:</label>
         <input type="number" min="0" id="stock" name="stock">
+        <label for="pid">Product ID (Leave blank if adding new TV):</label>
+        <input type="number" min="0" id="pid" name="pid">
 
         <button class="nav-button" type="submit" name="action" value="AddTV">Add</button>
     </div>
@@ -70,6 +72,7 @@
                         <td>{{row["size"]}}</td>
                         <td>{{row["resolution"]}}</td>
                         <td>{{row["price"]}}</td>
+                        <td>{{row["productid"]}}</td>
                     </tr>
                     {% endfor %}
             </tbody>
