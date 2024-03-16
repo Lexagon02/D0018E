@@ -341,31 +341,36 @@ def adminStuff():
                     sql4 = "SELECT productid FROM tv WHERE model=%s;"
                     cursorRemReview.execute(sql4,(model))
                     pid=cursorRemReview.fetchall()
-                    pid=pid[0].get("productid")
-                    session["pid"]=pid
+                    print(pid)
                     cursorRemReview.execute(sqlTV)
                     result = cursorRemReview.fetchall()
                     cursorRemReview.execute(sqlUser)
                     userdata = cursorRemReview.fetchall()
                     cursorRemReview.execute(sqlOrder)
                     orderdata = cursorRemReview.fetchall()
-                    cursorRemReview.execute(sql3,(pid))
+
                     orderresult=[]
                     for order in orderdata:
                         cursorRemReview.execute(sqlOrderUser,order.get('userid'))
                         temp=cursorRemReview.fetchall()
                         temp[0].update(order)
                         orderresult=orderresult+temp
-                    cursorRemReview.execute(sql3,(pid))
-                    reviewdata=cursorRemReview.fetchall()
-                    reviewresult=[]
-                    for review in reviewdata:
-                        cursorRemReview.execute(sqlReviewMail,review.get('userid'))
-                        temp=cursorRemReview.fetchall()
-                        temp[0].update(review)
-                        reviewresult=reviewresult+temp
-                    adminRemReview.commit()
-                    return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata,orderdata=orderresult,reviewresult=reviewresult)
+                    if pid==():
+                        print("p")
+                    else:
+                        pid=pid[0].get("productid")
+                        session["pid"]=pid
+                       
+                        cursorRemReview.execute(sql3,(pid))
+                        reviewdata=cursorRemReview.fetchall()
+                        reviewresult=[]
+                        for review in reviewdata:
+                            cursorRemReview.execute(sqlReviewMail,review.get('userid'))
+                            temp=cursorRemReview.fetchall()
+                            temp[0].update(review)
+                            reviewresult=reviewresult+temp
+                        adminRemReview.commit()
+                        return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata,orderdata=orderresult,reviewresult=reviewresult)
     else:
         with adminCon:
             with adminCon.cursor() as cursorShowTV:
