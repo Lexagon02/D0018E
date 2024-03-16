@@ -215,6 +215,7 @@ def adminStuff():
                     sqlDelORder="DELETE FROM orders WHERE userid=%s"
                     sqlUserID="SELECT id FROM users WHERE mail=%s"
                     sqlDelCart="DELETE FROM cart WHERE userid=%s"
+                    sqlDelReviews="DELETE FROM reviews WHERE userid=%s"
                     cursorRemUser.execute(sqlUserID,mail)#get id from mail
                     user=cursorRemUser.fetchall()
                     
@@ -237,8 +238,9 @@ def adminStuff():
                     print("a")
                     cursorRemUser.execute(sqlDelORder,user[0].get('id'))#delete orders by user
                     cursorRemUser.execute(sqlDelCart,user[0].get('id'))#delete users cart
+                    cursorRemUser.execute(sqlDelReviews,user[0].get('id'))
                     cursorRemUser.execute(sql3,(mail))#delete user
-
+                    
                     cursorRemUser.execute(sqlUser)
                     userdata = cursorRemUser.fetchall()
 
