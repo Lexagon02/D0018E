@@ -30,7 +30,7 @@
 <form action="{{ url_for("auth.adminStuff")}}" method="post">
     <div class = "registerform">
         <h1>Update or Add TV</h1>
-        
+        <br>
         <label for="pid">(If editing TV, choose PID. If adding TV, PID leave blank):</label>
         <label for="pid">Product ID:</label>
         <input type="number" min="0" id="pid" name="pid">
@@ -57,7 +57,7 @@
             <button class="nav-button" type="submit" name="action" value="DeleteTV">Remove</button>
 
     </div>
-    
+    <br>
     <div class="game-container" id="game-container">
         <table>
             <thead>
@@ -85,7 +85,9 @@
           
     </div>
     <div class = "registerform">
+        <br>
         <h1>Remove User</h1>
+        <br>
         <label for="mailRem">Email:</label>
         <input type="text" id="mailRem" name="mailRem">
         <button class="nav-button" type="submit" name="action" value="DeleteUser">Remove</button>
@@ -118,7 +120,9 @@
           
     </div>
     <div class = "registerform">
+        <br>
         <h1>Orders</h1>
+        <br>
         <label for="orderRem">OrderID:</label>
         <input type="text" id="orderRem" name="orderRem">
         <button class="nav-button" type="submit" name="action" value="DeleteOrder">Remove</button>
@@ -151,7 +155,9 @@
           
     </div>
     <div class = "registerform">
+        <br>
         <h1>Check order</h1>
+        <br>
         <label for="orderCheck">OrderID:</label>
         <input type="text" id="orderCheck" name="orderCheck">
         <button class="nav-button" type="submit" name="action" value="CheckOrder">Check</button>
