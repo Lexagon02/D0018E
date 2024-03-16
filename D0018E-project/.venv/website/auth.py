@@ -129,11 +129,15 @@ def adminStuff():
     adminCon=connection()
     heading = ['Brand', 'Model', 'Size', 'Resolution', 'Price', "Stock",'ProductID']
 
+
+    #SQL statments for the page
     sqlTV =  "SELECT model, brand, size, resolution, price, productid,stock FROM `tv` WHERE active = 1"
     sqlUser =  "SELECT name, surname, mail, password, address, isAdmin FROM `users`"
     sqlOrder =  "SELECT userid,orderid,date FROM `orders` GROUP BY orderid ORDER BY orderid"
     sqlGetModel="SELECT model,brand FROM tv WHERE productid=%s"
     sqlOrderUser =  "SELECT name, surname, mail, address FROM users WHERE id=%s"
+    sqlReviewMail="SELECT mail FROM users WHERE id=%s"
+
     if request.method == "POST":
         if request.form["action"]=="AddTV":
             model = request.form.get("model")
@@ -163,6 +167,8 @@ def adminStuff():
                             print(data[i])
                             # Using placeholders for column names without single quotes
                             cursoraddTV.execute(sql.format(set_clause), (data[i], pid))
+
+                    #Load all data for all tables on page
                     cursoraddTV.execute(sqlTV)
                     result = cursoraddTV.fetchall()
                     cursoraddTV.execute(sqlUser)
@@ -170,11 +176,12 @@ def adminStuff():
                     cursoraddTV.execute(sqlOrder)
                     orderdata = cursoraddTV.fetchall()
                     orderresult=[]
-                    for order in orderdata:
+                    for order in orderdata:#Combine orderdata with userdata
                         cursoraddTV.execute(sqlOrderUser,order.get('userid'))
                         temp=cursoraddTV.fetchall()
                         temp[0].update(order)
                         orderresult=orderresult+temp
+                    
                     adminCon.commit() 
             
         if request.form["action"]=="DeleteTV":
@@ -290,6 +297,75 @@ def adminStuff():
                         orderresult=orderresult+temp
                     adminRemUser.commit()        
             return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata,orderdata=orderresult,checkorderdata=checkorderresult) 
+        if request.form["action"]=="DeleteReview":
+            adminRemReview=connection()
+            uid = request.form.get("reviewRem")
+            print("rem")
+            with adminRemReview:
+                with adminRemReview.cursor() as cursorRemReview:
+                    sql3 = "DELETE FROM reviews WHERE userid=%s and productid=%s;"
+                    sql6 = "SELECT * FROM reviews WHERE productid=%s;"
+                    if not session.get("pid"):
+                        pid=0
+                    else:
+                        pid=session["pid"]
+                    cursorRemReview.execute(sql3,(uid,pid))
+                    cursorRemReview.execute(sqlTV)
+                    result = cursorRemReview.fetchall()
+                    cursorRemReview.execute(sqlUser)
+                    userdata = cursorRemReview.fetchall()
+                    cursorRemReview.execute(sqlOrder)
+                    orderdata = cursorRemReview.fetchall()
+                    orderresult=[]
+                    for order in orderdata:
+                        cursorRemReview.execute(sqlOrderUser,order.get('userid'))
+                        temp=cursorRemReview.fetchall()
+                        temp[0].update(order)
+                        orderresult=orderresult+temp
+                    cursorRemReview.execute(sql6,(pid))
+                    reviewdata = cursorRemReview.fetchall()
+                    reviewresult=[]
+                    for review in reviewdata:
+                        cursorRemReview.execute(sqlReviewMail,review.get('userid'))
+                        temp=cursorRemReview.fetchall()
+                        temp[0].update(review)
+                        reviewresult=reviewresult+temp
+                    adminRemReview.commit()
+                    return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata,orderdata=orderresult,reviewresult=reviewresult)
+        if request.form["action"]=="searchReview":
+            adminRemReview=connection()
+            model = request.form.get("searchRev")
+            with adminRemReview:
+                with adminRemReview.cursor() as cursorRemReview:
+                    sql3 = "SELECT * FROM reviews WHERE productid=%s;"
+                    sql4 = "SELECT productid FROM tv WHERE model=%s;"
+                    cursorRemReview.execute(sql4,(model))
+                    pid=cursorRemReview.fetchall()
+                    pid=pid[0].get("productid")
+                    session["pid"]=pid
+                    cursorRemReview.execute(sqlTV)
+                    result = cursorRemReview.fetchall()
+                    cursorRemReview.execute(sqlUser)
+                    userdata = cursorRemReview.fetchall()
+                    cursorRemReview.execute(sqlOrder)
+                    orderdata = cursorRemReview.fetchall()
+                    cursorRemReview.execute(sql3,(pid))
+                    orderresult=[]
+                    for order in orderdata:
+                        cursorRemReview.execute(sqlOrderUser,order.get('userid'))
+                        temp=cursorRemReview.fetchall()
+                        temp[0].update(order)
+                        orderresult=orderresult+temp
+                    cursorRemReview.execute(sql3,(pid))
+                    reviewdata=cursorRemReview.fetchall()
+                    reviewresult=[]
+                    for review in reviewdata:
+                        cursorRemReview.execute(sqlReviewMail,review.get('userid'))
+                        temp=cursorRemReview.fetchall()
+                        temp[0].update(review)
+                        reviewresult=reviewresult+temp
+                    adminRemReview.commit()
+                    return render_template("adminStuff.html",headings=heading,data=result,userdata=userdata,orderdata=orderresult,reviewresult=reviewresult)
     else:
         with adminCon:
             with adminCon.cursor() as cursorShowTV:
@@ -335,7 +411,6 @@ def cart():
                 cursorCart.execute(sql,uid)
                 input = cursorCart.fetchall()
                 if request.method == "POST":
-                    print("------------")
                     sqlStock="SELECT stock,active FROM tv WHERE productid =%s"
                     sql = "INSERT INTO orders (orderid,userid,date,productid,amount) VALUES(%s,%s,%s,%s,%s)"
                     sqlrem="DELETE FROM cart WHERE userid=%s"
@@ -351,13 +426,10 @@ def cart():
                     return render_template("cart.html", headings=heading,data=result)
 
                 else:
-                    #OM DU HAR INACTIVE TV SOM SISTA ORDER, ALLTSÅ DEN MED HÖGST PRODUCTid ÄR INAKTIV KOMMER HELA CARTEN GÅ SÖNDER
                     for i in range(len(input)):
                         sql= "SELECT brand,model,price FROM tv WHERE productid = %s AND active=1"
                         cursorCart.execute(sql,(input[i].get('productid')))
-            
                         temp=cursorCart.fetchall()
-                        
                         if temp == ():
                             return render_template("cart.html")
                         temp[0].update(input[i].items())
