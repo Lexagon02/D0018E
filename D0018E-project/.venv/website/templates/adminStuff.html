@@ -84,6 +84,39 @@
           </table>
           
     </div>
+    
+    <div class = "registerform">
+        <h1>Reviews</h1>
+        <label for="searchRev">Model:</label>
+        <input type="text" id="searchRev" name="searchRev">
+        <button class="nav-button" type="submit" name="action" value="searchReview">Search</button>
+        <label for="reviewRem">UserID:</label>
+        <input type="text" id="reviewRem" name="reviewRem">
+        <button class="nav-button" type="submit" name="action" value="DeleteReview">Remove review</button>
+    </div>
+    <div class="game-container" id="game-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>UserID</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                    {% for row in reviewresult %}
+                    <tr>
+                        <td>{{row["mail"]}}</td>
+                        <td>{{row["userid"]}}</td>
+                        <td>{{row["rating"]}}</td>
+                        <td>{{row["comment"]}}</td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+          </table>
+          
+    </div>
     <div class = "registerform">
         <h1>Remove User</h1>
         <label for="mailRem">Email:</label>
@@ -185,5 +218,6 @@
           </table>
           
     </div>
-    </form>
+    
+</form>
 </html>
