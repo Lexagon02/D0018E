@@ -30,11 +30,25 @@ def home():
 
         with c.cursor() as cursor:
             # Read a single record
-            sql = "SELECT model, brand, size, resolution, price, stock FROM tv WHERE active=1"
+            sql = "SELECT productid,model, brand, size, resolution, price, stock FROM tv WHERE active=1"
+            sqlAllRev="SELECT rating FROM reviews WHERE productid=%s"
             cursor.execute(sql)
             result = cursor.fetchall()
+            for product in result:#for all products
+                cursor.execute(sqlAllRev,product.get("productid"))
+                temp = cursor.fetchall()
+                if temp == ():#if no ratings
+                    product["rating"]="-"
+                    continue
+                ratingvalue=0
+                i=0
+                for rating in temp: #sum of all ratings of product
+                    ratingvalue+=rating.get("rating")
+                    i+=1#number of ratings
+                average=ratingvalue/i#average
+                product["rating"]=average#add to product
 
-    headings = ['Brand', 'Model', 'Size', 'Resolution', 'Price', 'Stock']
+    headings = ['Brand', 'Model', 'Size', 'Resolution', 'Price','Rating of 5', 'Stock']
     if not session.get("name"):
         login=0
     else:
@@ -51,7 +65,7 @@ def home():
 def index():
     form = addForm()
     homeConnection = connection()
-    headings = ['Brand', 'Model', 'Size', 'Resolution', 'Price', 'Stock']
+    headings = ['Brand', 'Model', 'Size', 'Resolution', 'Price','Rating of 5', 'Stock']
     if request.method == "POST":
         serial = request.form.get("model",1)
         amount = request.form.get("NUMBER")
@@ -101,11 +115,28 @@ def index():
                     homeCursor.execute(sqlGet,(pid.get('productid'),uid[0].get('id'),amount))
 
                 
-                sql = "SELECT model, brand, size, resolution, price, stock FROM tv where active = 1"
+                sql = "SELECT productid,model, brand, size, resolution, price, stock FROM tv where active = 1"
+                sqlAllRev="SELECT rating FROM reviews WHERE productid=%s"
                 homeCursor.execute(sql)
                 result = homeCursor.fetchall()
+                for product in result:#for all products
+                    homeCursor.execute(sqlAllRev,product.get("productid"))
+                    temp = homeCursor.fetchall()
+                    if temp == ():#if no ratings
+                        product["rating"]="-"
+                        continue
+                    ratingvalue=0
+                    i=0
+                    for rating in temp: #sum of all ratings of product
+                        ratingvalue+=rating.get("rating")
+                        i+=1#number of ratings
+                    average=ratingvalue/i#average
+                    product["rating"]=average#add to product
+
                 homeConnection.commit()
+                return render_template('index.html',headings=headings, data=result, value=login, form=form)
             elif(product is not None):
+                
                 return render_template("product.html",data = pid,form=form)
             else:
                 return render_template('index.html',headings=headings, data=result, value=login, form=form)
